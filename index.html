@@ -45,11 +45,12 @@
             <div class="input-group otp-group">
                 <i class="fa-regular fa-envelope icon"></i>
                 <input type="text" id="otpCode" placeholder="OTP Code" required>
+                <!-- बटन पर सीधा Recaptcha ट्रिगर करने के लिए ID सेट है -->
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
 
-            <!-- Firebase सुरक्षा वेरिफिकेशन बॉक्स के लिए जगह (यह अदृश्य रहेगा) -->
-            <div id="recaptcha-container" style="margin-bottom: 15px; display: flex; justify-content: center;"></div>
+            <!-- अदृश्य सुरक्षा बॉक्स की जगह -->
+            <div id="recaptcha-container"></div>
 
             <!-- Invite Code -->
             <div class="input-group">
@@ -63,19 +64,18 @@
         </form>
     </div>
 
-<!-- Supabase SDK (टूटे हुए लिंक्स को ठीक कर दिया) -->
+<!-- Supabase डेटाबेस कनेक्शन लाइब्रेरी -->
 <script src="https://jsdelivr.net"></script>
 
-<!-- Firebase SDK मॉड्यूल (इसके ज़रिए असली OTP फोन पर जाएगा) -->
+<!-- Firebase इंजन कोर फ़ाइलें -->
 <script type="module">
   import { initializeApp } from "https://gstatic.com";
-  import { getAnalytics } from "https://gstatic.com";
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://gstatic.com";
 
-  // आपका Firebase कॉन्फ़िगरेशन
+  // आपका सुरक्षित प्रोजेक्ट कॉन्फ़िगरेशन
   const firebaseConfig = {
     apiKey: "AIzaSyD-wRwZiXZvrZWMlKAlxGvc_4I_yjXh7Uc",
-    authDomain: "rk-pay-3c7e2.firebaseapp.com",
+    authDomain: "://firebaseapp.com",
     projectId: "rk-pay-3c7e2",
     storageBucket: "rk-pay-3c7e2.firebasestorage.app",
     messagingSenderId: "945406958282",
@@ -83,44 +83,28 @@
     measurementId: "G-7GE17PRFR1"
   };
 
-  // Firebase चालू करना
+  // सिस्टम चालू करें
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
   const auth = getAuth(app);
 
-  // ग्लोबल वेरिएबल ताकि नीचे वाला स्क्रिप्ट इसे पढ़ सके
+  // दूसरे स्क्रिप्ट्स के इस्तेमाल के लिए विंडो पर असाइन करें
   window.firebaseAuth = auth;
   window.RecaptchaVerifier = RecaptchaVerifier;
   window.signInWithPhoneNumber = signInWithPhoneNumber;
 </script>
 
+<!-- बटन को एक्टिवेट करने और डेटाबेस में भेजने की मुख्य स्क्रिप्ट -->
 <script>
-  // Supabase कनेक्शन सेटअप
-  const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
+  // Supabase लाइव डेटाबेस कनेक्शन सेटअप
+  const supabaseUrl = 'https://supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  let confirmationResult = null; 
+  let confirmationResult = null;
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // Firebase सुरक्षा कैप्चा सेट करना
-  function setupRecaptcha() {
-      if (!window.recaptchaVerifier) {
-          window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
-              'size': 'invisible', 
-              'callback': (response) => {
-                  console.log("Recaptcha verified!");
-              },
-              'expired-callback': () => {
-                  alert("कैप्चा एक्सपायर हो गया, कृपया फिर से कोशिश करें।");
-              }
-          });
-          window.recaptchaVerifier.render();
-      }
-  }
-
-  // ओटीपी भेजने का लॉजिक (Firebase Phone Auth)
+  // सेंड बटन क्लिक होने पर सीधे ओटीपी भेजने का ऑटोमैटिक लॉजिक
   if (sendBtn) {
       sendBtn.addEventListener('click', async function() {
           const phoneInput = document.getElementById('phone').value;
@@ -131,22 +115,28 @@
               return;
           }
 
-          // पूरा नंबर बनाना (जैसे: +919876543210)
           const fullPhoneNumber = countryCode + phoneInput;
 
           try {
               sendBtn.innerText = "Sending...";
               sendBtn.disabled = true;
 
-              setupRecaptcha();
+              // बटन दबाते ही अदृश्य सुरक्षा रोबोट चेक लागू करें
+              if (!window.recaptchaVerifier) {
+                  window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+                      'size': 'invisible',
+                      'callback': (response) => {}
+                  });
+              }
+
               const appVerifier = window.recaptchaVerifier;
 
-              // गिटहब डोमेन से सीधा असली SMS भेजना
+              // सीधा आपके मोबाइल नेटवर्क पर एसएमएस कमांड फायर करना
               confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
-              
               alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
+              
           } catch (error) {
-              alert("OTP भेजने में फेल: " + error.message);
+              alert("एरर: " + error.message);
               console.error(error);
               if (window.recaptchaVerifier) {
                   window.recaptchaVerifier.clear();
@@ -159,7 +149,7 @@
       });
   }
 
-  // फॉर्म सबमिट होने पर OTP चेक करना और Supabase में डेटा डालना
+  // पूरा फॉर्म सबमिट होने पर डेटाबेस में एंट्री करने का लॉजिक
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
@@ -172,19 +162,18 @@
       }
 
       try {
-          // ऑनलाइन OTP वेरिफिकेशन
+          // ओटीपी कोड मैचिंग चेकिंग
           await confirmationResult.confirm(enteredOtp);
           alert('OTP वेरिफिकेशन सफल रहा!');
       } catch (error) {
-          alert('भाई, गलत OTP डाला है या यह एक्सपायर हो गया है! फिर से चेक कर.');
+          alert('गलत OTP डाला है या यह एक्सपायर हो गया है!');
           return;
       }
 
-      // अगर OTP सही है, तो डेटा Supabase में सेव होगा
+      // पासवर्ड और नंबर फ़ेच करके सीधा Supabase में स्टोर करना
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const phone = document.getElementById('phone').value;
-      const invite = document.getElementById('inviteCode').value;
 
       const { data, error } = await _supabase
         .from('users')
@@ -196,15 +185,11 @@
         ]);
 
       if (error) {
-        alert('डेटा सेव करने में दिक्कत आई: ' + error.message);
+        alert('Supabase एरर: ' + error.message);
       } else {
         alert('डेटा सफलतापूर्वक सेव हो गया!');
         form.reset();
-        confirmationResult = null; 
-        if (window.recaptchaVerifier) {
-            window.recaptchaVerifier.clear();
-            window.recaptchaVerifier = null;
-        }
+        confirmationResult = null;
       }
     });
   }
