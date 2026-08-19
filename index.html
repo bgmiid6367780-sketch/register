@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <!-- Google Fonts & Font Awesome Icons -->
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="style.css">
@@ -12,66 +11,55 @@
 <body>
 
     <div class="register-container">
-        <!-- Top Navigation -->
         <div class="header">
             <a href="#" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
             <h2>Register</h2>
             <div class="spacer"></div>
         </div>
 
-        <!-- Form Elements -->
         <form id="loginForm">
-            
-            <!-- User Name -->
             <div class="input-group">
                 <i class="fa-regular fa-user icon"></i>
                 <input type="text" id="username" placeholder="User Name" required>
             </div>
 
-            <!-- Password -->
             <div class="input-group">
                 <i class="fa-solid fa-lock icon"></i>
                 <input type="password" id="password" placeholder="Password" required>
             </div>
 
-            <!-- Phone Number -->
             <div class="input-group phone-group">
                 <i class="fa-solid fa-phone icon"></i>
                 <span class="country-code" id="countryCode">+91</span>
                 <input type="tel" id="phone" placeholder="Phone" required>
             </div>
 
-            <!-- सुरक्षा वेरिफिकेशन बॉक्स (यह अब आपके सेंड बटन के ऊपर पक्का दिखाई देगा) -->
+            <!-- सुरक्षा रीकैप्चा बॉक्स (यह वरसेल पर पक्का दिखाई देगा) -->
             <div id="recaptcha-container" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
 
-            <!-- OTP Code -->
             <div class="input-group otp-group">
                 <i class="fa-regular fa-envelope icon"></i>
                 <input type="text" id="otpCode" placeholder="OTP Code" required>
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
 
-            <!-- Invite Code -->
             <div class="input-group">
                 <i class="fa-solid fa-link icon"></i>
                 <input type="text" id="inviteCode" placeholder="Invite Code">
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" class="signup-btn">Sign Up</button>
-
         </form>
     </div>
 
-<!-- Supabase डेटाबेस लाइब्रेरी -->
+<!-- Supabase डेटाबेस कनेक्शन -->
 <script src="https://jsdelivr.net"></script>
 
-<!-- गिटहब फ्रेंडली कम्पेक्ट स्क्रिप्ट (सब कुछ एक ही जगह सेट कर दिया है) -->
+<!-- असली Firebase SDK इंजन -->
 <script type="module">
   import { initializeApp } from "https://gstatic.com";
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://gstatic.com";
 
-  // आपका Firebase कॉन्फ़िगरेशन
   const firebaseConfig = {
     apiKey: "AIzaSyD-wRwZiXZvrZWMlKAlxGvc_4I_yjXh7Uc",
     authDomain: "://firebaseapp.com",
@@ -82,10 +70,30 @@
     measurementId: "G-7GE17PRFR1"
   };
 
-  // Firebase और Supabase दोनों का सेटअप इसी एक स्क्रिप्ट में ताकि क्रैश न हो
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  window.firebaseAuth = auth;
+  window.RecaptchaVerifier = RecaptchaVerifier;
+  window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+  // पेज लोड होते ही सुरक्षा बॉक्स को चालू करना
+  window.onload = function() {
+      try {
+          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+              'size': 'normal', 
+              'callback': (response) => {
+                  console.log("Verified!");
+              }
+          });
+          window.recaptchaVerifier.render();
+      } catch (e) {
+          console.error(e);
+      }
+  };
+</script>
+
+<script>
   const supabaseUrl = 'https://supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -94,22 +102,6 @@
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // पेज लोड होते ही सुरक्षा रोबोट डिब्बे को जबरन स्क्रीन पर लाना
-  window.onload = function() {
-      try {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-              'size': 'normal', 
-              'callback': (response) => {
-                  console.log("सुरक्षा वेरिफिकेशन सफल!");
-              }
-          });
-          window.recaptchaVerifier.render();
-      } catch (e) {
-          console.error("सुरक्षा बॉक्स लोड करने में त्रुटि:", e);
-      }
-  };
-
-  // ओटीपी भेजने का बटन एक्शन
   if (sendBtn) {
       sendBtn.addEventListener('click', async function() {
           const phoneInput = document.getElementById('phone').value;
@@ -126,20 +118,12 @@
               sendBtn.innerText = "Sending...";
               sendBtn.disabled = true;
 
-              if (!window.recaptchaVerifier) {
-                  alert("कृपया पेज को एक बार रिफ्रेश (सफ़ाई) करें!");
-                  sendBtn.innerText = "Send";
-                  sendBtn.disabled = false;
-                  return;
-              }
-
               const appVerifier = window.recaptchaVerifier;
-              confirmationResult = await signInWithPhoneNumber(auth, fullPhoneNumber, appVerifier);
+              confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
               alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
               
           } catch (error) {
               alert("ओटीपी भेजने में एरर: " + error.message);
-              console.error(error);
           } finally {
               sendBtn.innerText = "Send";
               sendBtn.disabled = false;
@@ -147,11 +131,9 @@
       });
   }
 
-  // फॉर्म सबमिट और डेटाबेस स्टोरेज
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
-
       const enteredOtp = document.getElementById('otpCode').value;
 
       if (!confirmationResult) {
@@ -163,7 +145,7 @@
           await confirmationResult.confirm(enteredOtp);
           alert('OTP वेरिफिकेशन सफल रहा!');
       } catch (error) {
-          alert('गलत OTP डाला है या यह एक्सपायर हो गया है!');
+          alert('गलत OTP डाला है!');
           return;
       }
 
@@ -172,26 +154,17 @@
 
       const { data, error } = await _supabase
         .from('users')
-        .insert([
-          { 
-            phone_number: phone, 
-            password_hash: password 
-          }
-        ]);
+        .insert([{ phone_number: phone, password_hash: password }]);
 
       if (error) {
-        alert('Supabase डेटाबेस एरर: ' + error.message);
+        alert('डेटाबेस एरर: ' + error.message);
       } else {
-        alert('बधाई हो, आपका डेटा सफलतापूर्वक सेव हो गया!');
+        alert('सफलतापूर्वक डेटा सेव हो गया!');
         form.reset();
         confirmationResult = null;
-        if(window.recaptchaVerifier) {
-            window.recaptchaVerifier.clear();
-        }
       }
     });
   }
 </script>
-
 </body>
 </html>
