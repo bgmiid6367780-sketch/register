@@ -6,7 +6,21 @@
     <title>Register</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .register-container { background-color: #ffffff; width: 100%; max-width: 400px; padding: 30px 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 35px; }
+        .header h2 { color: #0d8c54; font-size: 22px; font-weight: 600; }
+        .back-btn { color: #0d8c54; font-size: 20px; text-decoration: none; }
+        .spacer { width: 20px; }
+        .input-group { display: flex; align-items: center; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; margin-bottom: 20px; background-color: #ffffff; }
+        .input-group .icon { color: #0d8c54; font-size: 18px; margin-right: 12px; width: 20px; text-align: center; }
+        .input-group input { border: none; outline: none; width: 100%; font-size: 15px; color: #333; }
+        .phone-group .country-code { font-size: 15px; font-weight: 600; color: #0d8c54; margin-right: 10px; padding-right: 10px; border-right: 1px solid #e2e8f0; }
+        .send-btn { background-color: #0d8c54; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 500; }
+        .signup-btn { background-color: #0d8c54; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: 500; border-radius: 30px; cursor: pointer; margin-top: 15px; }
+    </style>
 </head>
 <body>
 
@@ -34,12 +48,13 @@
                 <input type="tel" id="phone" placeholder="Phone" required>
             </div>
 
-            <!-- सुरक्षा रीकैप्चा बॉक्स (यह वरसेल पर पक्का दिखाई देगा) -->
-            <div id="recaptcha-container" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+            <!-- सुरक्षा रीकैप्चा बॉक्स (बटन दबाते ही इसके ज़रिए वेरिफिकेशन होगा) -->
+            <div id="recaptcha-container"></div>
 
             <div class="input-group otp-group">
                 <i class="fa-regular fa-envelope icon"></i>
                 <input type="text" id="otpCode" placeholder="OTP Code" required>
+                <!-- बटन पर सीधा ID सेट कर दिया है -->
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
 
@@ -52,7 +67,7 @@
         </form>
     </div>
 
-<!-- Supabase डेटाबेस कनेक्शन -->
+<!-- Supabase डेटाबेस लाइब्रेरी -->
 <script src="https://jsdelivr.net"></script>
 
 <!-- असली Firebase SDK इंजन -->
@@ -73,22 +88,22 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  // ग्लोबल वेरिएबल सेट किए ताकि नीचे वाला कोड इसे पढ़ सके
   window.firebaseAuth = auth;
-  window.RecaptchaVerifier = RecaptchaVerifier;
   window.signInWithPhoneNumber = signInWithPhoneNumber;
 
-  // पेज लोड होते ही सुरक्षा बॉक्स को चालू करना
+  // बटन क्लिक होते ही अदृश्य रीकैप्चा ट्रिगर करने का कोड
   window.onload = function() {
       try {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-              'size': 'normal', 
+          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sendOtpBtn', {
+              'size': 'invisible', 
               'callback': (response) => {
-                  console.log("Verified!");
+                  // रीकैप्चा सफल होने पर अपने आप ओटीपी सेंड होगा
+                  sendOtpLogic();
               }
           });
-          window.recaptchaVerifier.render();
       } catch (e) {
-          console.error(e);
+          console.error("Verification Setup Failed: ", e);
       }
   };
 </script>
@@ -102,35 +117,48 @@
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
+  // ओटीपी भेजने का असली वर्किंग फंक्शन
+  async function sendOtpLogic() {
+      const phoneInput = document.getElementById('phone').value;
+      const countryCode = document.getElementById('countryCode').innerText;
+
+      if (!phoneInput || phoneInput.length < 10) {
+          alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
+          if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
+          return;
+      }
+
+      const fullPhoneNumber = countryCode + phoneInput;
+
+      try {
+          sendBtn.innerText = "Sending...";
+          sendBtn.disabled = true;
+
+          const appVerifier = window.recaptchaVerifier;
+          confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
+          alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
+          
+      } catch (error) {
+          alert("ओटीपी भेजने में एरर: " + error.message);
+          if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
+      } finally {
+          sendBtn.innerText = "Send";
+          sendBtn.disabled = false;
+      }
+  }
+
+  // बटन क्लिक को एक्टिवेट करने का कोड जो गायब था
   if (sendBtn) {
-      sendBtn.addEventListener('click', async function() {
-          const phoneInput = document.getElementById('phone').value;
-          const countryCode = document.getElementById('countryCode').innerText;
-
-          if (!phoneInput || phoneInput.length < 10) {
-              alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
-              return;
-          }
-
-          const fullPhoneNumber = countryCode + phoneInput;
-
-          try {
-              sendBtn.innerText = "Sending...";
-              sendBtn.disabled = true;
-
-              const appVerifier = window.recaptchaVerifier;
-              confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
-              alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
-              
-          } catch (error) {
-              alert("ओटीपी भेजने में एरर: " + error.message);
-          } finally {
-              sendBtn.innerText = "Send";
-              sendBtn.disabled = false;
+      sendBtn.addEventListener('click', function() {
+          if (window.recaptchaVerifier) {
+              window.recaptchaVerifier.verify(); // रीकैप्चा चेक शुरू करें
+          } else {
+              alert("सिस्टम लोड हो रहा है, कृपया 2 सेकंड रुककर फिर दबाएँ।");
           }
       });
   }
 
+  // फॉर्म सबमिट डेटाबेस कोड
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
