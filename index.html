@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -48,7 +48,7 @@
                 <input type="tel" id="phone" placeholder="Phone" required>
             </div>
 
-            <!-- सुरक्षा रीकैप्चा बॉक्स (यह स्क्रीन पर पक्का दिखेगा ताकि बटन लॉक न हो) -->
+            <!-- सुरक्षा रीकैप्चा बॉक्स -->
             <div id="recaptcha-container" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
 
             <div class="input-group otp-group">
@@ -66,17 +66,17 @@
         </form>
     </div>
 
-<!-- Supabase डेटाबेस कनेक्शन -->
-<script src="https://jsdelivr.net"></script>
+<!-- Supabase डेटाबेस कनेक्शन का सही लिंक -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- असली Firebase SDK इंजन -->
+<!-- असली Firebase SDK इंजन के सही लिंक्स -->
 <script type="module">
-  import { initializeApp } from "https://gstatic.com";
-  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://gstatic.com";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD-wRwZiXZvrZWMlKAlxGvc_4I_yjXh7Uc",
-    authDomain: "://firebaseapp.com",
+    authDomain: "rk-pay-3c7e2.firebaseapp.com",
     projectId: "rk-pay-3c7e2",
     storageBucket: "rk-pay-3c7e2.firebasestorage.app",
     messagingSenderId: "945406958282",
@@ -90,7 +90,6 @@
   window.firebaseAuth = auth;
   window.signInWithPhoneNumber = signInWithPhoneNumber;
 
-  // पेज लोड होते ही सुरक्षा बॉक्स को स्क्रीन पर दिखाना ताकि बटन तुरंत चालू हो जाए
   window.onload = function() {
       try {
           window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -107,7 +106,8 @@
 </script>
 
 <script>
-  const supabaseUrl = 'https://supabase.co';
+  // Supabase का सही URL और Key
+  const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -132,7 +132,7 @@
               sendBtn.disabled = true;
 
               const appVerifier = window.recaptchaVerifier;
-              // सीधा आपके मोबाइल नेटवर्क पर एसएमएस कमांड फायर करना
+              
               confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
               alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
               
