@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="register-container">
+        <!-- Top Navigation -->
+        <div class="header">
+            <a href="#" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <h2>Register</h2>
+            <div class="spacer"></div>
+        </div>
+
+        <!-- Form Elements -->
+        <form id="loginForm" action="https://epktoxtdzinybptgdhdu.supabase.co"
+" method="POST">
+            
+            <!-- User Name -->
+            <div class="input-group">
+                <i class="fa-regular fa-user icon"></i>
+                <input type="text" placeholder="User Name" required>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <i class="fa-solid fa-lock icon"></i>
+                <input type="password" placeholder="Password" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="input-group phone-group">
+                <i class="fa-solid fa-phone icon"></i>
+                <span class="country-code">+91</span>
+                <input type="tel" placeholder="Phone" required>
+            </div>
+
+            <!-- OTP Code -->
+            <div class="input-group otp-group">
+                <i class="fa-regular fa-envelope icon"></i>
+                <input type="text" placeholder="OTP Code" required>
+                <button type="button" class="send-btn">Send</button>
+            </div>
+
+            <!-- Invite Code -->
+            <div class="input-group">
+                <i class="fa-solid fa-link icon"></i>
+                <input type="text" placeholder="Invite Code">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="signup-btn">Sign Up</button>
+
+        </form>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Supabase कनेक्शन की जानकारी
+  const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
+  const supabaseKey = 'sb_publishable_pQBVukX63ShneEauRMZYw_F9NyOQ69';
+  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  // फॉर्म सबमिट होने पर डेटा भेजने का कोड
+  const form = document.getElementById('loginForm');
+      // सेंड बटन पर क्लिक करने का लॉजिक
+    const sendBtn = document.querySelector('.send-btn');
+    let generatedOtp = null;
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', async function() {
+            const phoneInput = document.querySelector('input[type="tel"]');
+            const phone = phoneInput ? phoneInput.value : '';
+
+            if (phone.length < 10) {
+                alert('कृपया सही मोबाइल नंबर डालें!');
+                return;
+            }
+
+            // OTP भेजने वाला फंक्शन कॉल होगा
+            generatedOtp = await sendOTP(phone);
+        });
+    }
+    if (form) {  
+form.addEventListener('submit', async function(e) {
+      e.preventDefault(); // पेज को रिलोड होने से रोकता है
+            // --- यहाँ पेस्ट कर ---
+            const otpInput = document.querySelector('input[placeholder="OTP Code"]');
+            const enteredOtp = otpInput ? otpInput.value : '';
+
+            if (enteredOtp !== String(generatedOtp)) {
+                alert('भाई, गलत OTP डाला है! फिर से चेक कर.');
+                return;
+            }
+            // -------------------
+
+            // लाइन नंबर 94 से तेरा पुराना कोड जारी रहेगा
+            const usernameInput = form.querySelector...
+            
+      // फॉर्म के अंदर के इनपुट्स से डेटा निकालना
+      const usernameInput = form.querySelector('input[type="text"]');
+      const passwordInput = form.querySelector('input[type="password"]');
+
+      const username = usernameInput ? usernameInput.value : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      // Supabase की 'users' टेबल में डेटा डालना (password_hash के साथ)
+      const { data, error } = await _supabase
+        .from('users')
+        .insert([
+          { phone_number: username, password_hash: password }
+        ]);
+
+      if (error) {
+        alert('देटा सेव करने में दिक्कत आई: ' + error.message);
+      } else {
+        alert('डेटा सफलतापूर्वक सेव हो गया!');
+        form.reset();
+      }
+    });
+  }
+// --- OTP वाला नया कोड ---
+async function sendOTP(phone) {
+    const otp = Math.floor(100000 + Math.random() * 900000); 
+    const apiKey = 'cDKq0yIP52CxLmdSTbrtVHOUNQw8fhJ'; 
+    const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${otp}&numbers=${phone}`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if(data.return) {
+            alert("OTP आपके नंबर पर भेजा गया!");
+            return otp; // ये OTP हमें वेरीफाई करने के लिए चाहिए
+        } else {
+            alert("मैसेज नहीं गया: " + data.message);
+        }
+    } catch (error) {
+        alert("कुछ गड़बड़ हो गई, चेक करो!");
+    }
+}
+</script>
+
+</body>
+</html>
