@@ -48,13 +48,12 @@
                 <input type="tel" id="phone" placeholder="Phone" required>
             </div>
 
-            <!-- सुरक्षा रीकैप्चा बॉक्स (बटन दबाते ही इसके ज़रिए वेरिफिकेशन होगा) -->
-            <div id="recaptcha-container"></div>
+            <!-- सुरक्षा रीकैप्चा बॉक्स (यह स्क्रीन पर पक्का दिखेगा ताकि बटन लॉक न हो) -->
+            <div id="recaptcha-container" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
 
             <div class="input-group otp-group">
                 <i class="fa-regular fa-envelope icon"></i>
                 <input type="text" id="otpCode" placeholder="OTP Code" required>
-                <!-- बटन पर सीधा ID सेट कर दिया है -->
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
 
@@ -67,7 +66,7 @@
         </form>
     </div>
 
-<!-- Supabase डेटाबेस लाइब्रेरी -->
+<!-- Supabase डेटाबेस कनेक्शन -->
 <script src="https://jsdelivr.net"></script>
 
 <!-- असली Firebase SDK इंजन -->
@@ -88,22 +87,21 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // ग्लोबल वेरिएबल सेट किए ताकि नीचे वाला कोड इसे पढ़ सके
   window.firebaseAuth = auth;
   window.signInWithPhoneNumber = signInWithPhoneNumber;
 
-  // बटन क्लिक होते ही अदृश्य रीकैप्चा ट्रिगर करने का कोड
+  // पेज लोड होते ही सुरक्षा बॉक्स को स्क्रीन पर दिखाना ताकि बटन तुरंत चालू हो जाए
   window.onload = function() {
       try {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'sendOtpBtn', {
-              'size': 'invisible', 
+          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+              'size': 'normal', 
               'callback': (response) => {
-                  // रीकैप्चा सफल होने पर अपने आप ओटीपी सेंड होगा
-                  sendOtpLogic();
+                  console.log("Google Verification Successful!");
               }
           });
+          window.recaptchaVerifier.render();
       } catch (e) {
-          console.error("Verification Setup Failed: ", e);
+          console.error("Verification setup error:", e);
       }
   };
 </script>
@@ -117,48 +115,36 @@
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // ओटीपी भेजने का असली वर्किंग फंक्शन
-  async function sendOtpLogic() {
-      const phoneInput = document.getElementById('phone').value;
-      const countryCode = document.getElementById('countryCode').innerText;
-
-      if (!phoneInput || phoneInput.length < 10) {
-          alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
-          if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-          return;
-      }
-
-      const fullPhoneNumber = countryCode + phoneInput;
-
-      try {
-          sendBtn.innerText = "Sending...";
-          sendBtn.disabled = true;
-
-          const appVerifier = window.recaptchaVerifier;
-          confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
-          alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
-          
-      } catch (error) {
-          alert("ओटीपी भेजने में एरर: " + error.message);
-          if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-      } finally {
-          sendBtn.innerText = "Send";
-          sendBtn.disabled = false;
-      }
-  }
-
-  // बटन क्लिक को एक्टिवेट करने का कोड जो गायब था
   if (sendBtn) {
-      sendBtn.addEventListener('click', function() {
-          if (window.recaptchaVerifier) {
-              window.recaptchaVerifier.verify(); // रीकैप्चा चेक शुरू करें
-          } else {
-              alert("सिस्टम लोड हो रहा है, कृपया 2 सेकंड रुककर फिर दबाएँ।");
+      sendBtn.addEventListener('click', async function() {
+          const phoneInput = document.getElementById('phone').value;
+          const countryCode = document.getElementById('countryCode').innerText;
+
+          if (!phoneInput || phoneInput.length < 10) {
+              alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
+              return;
+          }
+
+          const fullPhoneNumber = countryCode + phoneInput;
+
+          try {
+              sendBtn.innerText = "Sending...";
+              sendBtn.disabled = true;
+
+              const appVerifier = window.recaptchaVerifier;
+              // सीधा आपके मोबाइल नेटवर्क पर एसएमएस कमांड फायर करना
+              confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
+              alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
+              
+          } catch (error) {
+              alert("ओटीपी भेजने में एरर: " + error.message);
+          } finally {
+              sendBtn.innerText = "Send";
+              sendBtn.disabled = false;
           }
       });
   }
 
-  // फॉर्म सबमिट डेटाबेस कोड
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
