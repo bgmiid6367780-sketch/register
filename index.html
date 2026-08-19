@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,7 +37,7 @@
             <!-- Phone Number -->
             <div class="input-group phone-group">
                 <i class="fa-solid fa-phone icon"></i>
-                <span class="country-code">+91</span>
+                <span class="country-code" id="countryCode">+91</span>
                 <input type="tel" id="phone" placeholder="Phone" required>
             </div>
 
@@ -47,6 +47,9 @@
                 <input type="text" id="otpCode" placeholder="OTP Code" required>
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
+
+            <!-- Firebase सुरक्षा वेरिफिकेशन बॉक्स के लिए जगह (यह अदृश्य रहेगा) -->
+            <div id="recaptcha-container"></div>
 
             <!-- Invite Code -->
             <div class="input-group">
@@ -61,16 +64,18 @@
     </div>
 
 <!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://jsdelivr.net"></script>
 
-<!-- Firebase SDK & Initialization -->
+<!-- Firebase SDK मॉड्यूल (इसके ज़रिए असली OTP फोन पर जाएगा) -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+  import { initializeApp } from "https://gstatic.com";
+  import { getAnalytics } from "https://gstatic.com";
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://gstatic.com";
 
+  // आपका Firebase कॉन्फ़िगरेशन
   const firebaseConfig = {
     apiKey: "AIzaSyD-wRwZiXZvrZWMlKAlxGvc_4I_yjXh7Uc",
-    authDomain: "rk-pay-3c7e2.firebaseapp.com",
+    authDomain: "://firebaseapp.com",
     projectId: "rk-pay-3c7e2",
     storageBucket: "rk-pay-3c7e2.firebasestorage.app",
     messagingSenderId: "945406958282",
@@ -78,55 +83,97 @@
     measurementId: "G-7GE17PRFR1"
   };
 
+  // Firebase चालू करना
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+
+  // ग्लोबल वेरिएबल ताकि नीचे दूसरा स्क्रिप्ट इसे पढ़ सके
+  window.firebaseAuth = auth;
+  window.RecaptchaVerifier = RecaptchaVerifier;
+  window.signInWithPhoneNumber = signInWithPhoneNumber;
 </script>
 
 <script>
   // Supabase कनेक्शन सेटअप
-  const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
+  const supabaseUrl = 'https://supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  let generatedOtp = null;
+  let confirmationResult = null; // Firebase OTP वेरिफिकेशन का डेटा रखने के लिए
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // ओटीपी भेजने का लॉजिक
+  // Firebase सुरक्षा कैप्चा सेट करना
+  function setupRecaptcha() {
+      if (!window.recaptchaVerifier) {
+          window.recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+              'size': 'invisible', // इसे छुपा कर रखा है ताकि डिज़ाइन खराब न हो
+              'callback': (response) => {}
+          });
+      }
+  }
+
+  // ओटीपी भेजने का लॉजिक (Firebase Phone Auth)
   if (sendBtn) {
       sendBtn.addEventListener('click', async function() {
-          const phone = document.getElementById('phone').value;
+          const phoneInput = document.getElementById('phone').value;
+          const countryCode = document.getElementById('countryCode').innerText;
 
-          if (!phone || phone.length < 10) {
+          if (!phoneInput || phoneInput.length < 10) {
               alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
               return;
           }
 
-          generatedOtp = Math.floor(100000 + Math.random() * 900000);
-          const apiKey = 'cDKq0yIP52CxLmdSTbrtVHOUNQw8fhJ'; 
-          const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${generatedOtp}&numbers=${phone}`;
+          // देश के कोड के साथ पूरा नंबर बनाना (जैसे: +919876543210)
+          const fullPhoneNumber = countryCode + phoneInput;
 
           try {
-              const res = await fetch(url);
-              alert("OTP भेज दिया गया है! (OTP: " + generatedOtp + ")");
+              sendBtn.innerText = "Sending...";
+              sendBtn.disabled = true;
+
+              // कैप्चा लोड करना
+              setupRecaptcha();
+              const appVerifier = window.recaptchaVerifier;
+
+              // Firebase के ज़रिए फोन पर असली SMS भेजना
+              confirmationResult = await window.signInWithPhoneNumber(window.firebaseAuth, fullPhoneNumber, appVerifier);
+              
+              alert("Firebase की तरफ से आपके मोबाइल पर असली OTP भेज दिया गया है!");
           } catch (error) {
-              alert("OTP जनरेट हो गया: " + generatedOtp);
+              alert("OTP भेजने में फेल: " + error.message);
+              console.error(error);
+              sendBtn.innerText = "Send";
+              sendBtn.disabled = false;
+          } finally {
+              sendBtn.innerText = "Send";
+              sendBtn.disabled = false;
           }
       });
   }
 
-  // फॉर्म सबमिट और डेटा सेव लॉजिक
+  // फॉर्म सबमिट होने पर OTP चेक करना और Supabase में डेटा डालना
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
 
       const enteredOtp = document.getElementById('otpCode').value;
 
-      if (generatedOtp && enteredOtp !== String(generatedOtp)) {
-          alert('भाई, गलत OTP डाला है! फिर से चेक कर.');
+      if (!confirmationResult) {
+          alert('कृपया पहले "Send" बटन दबाकर OTP मँगवाएं!');
           return;
       }
 
+      try {
+          // यूजर ने जो OTP डाला है, उसे Firebase से ऑनलाइन चेक करना
+          await confirmationResult.confirm(enteredOtp);
+          alert('OTP वेरिफिकेशन सफल रहा!');
+      } catch (error) {
+          alert('भाई, गलत OTP डाला है या यह एक्सपायर हो गया है! फिर से चेक कर.');
+          return;
+      }
+
+      // अगर OTP सही है, तो डेटा Supabase में सेव होगा
       const password = document.getElementById('password').value;
       const phone = document.getElementById('phone').value;
 
@@ -144,6 +191,7 @@
       } else {
         alert('डेटा सफलतापूर्वक सेव हो गया!');
         form.reset();
+        confirmationResult = null; // रीसेट करें
       }
     });
   }
