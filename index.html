@@ -64,14 +64,14 @@
 <script>
   // Supabase कनेक्शन सेटअप
   const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
-  const supabaseKey = 'sb_publishable_pQBVukX63ShneEauRMZYw_F9NyOQ69';
+  const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
   let generatedOtp = null;
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // ओटीपी (OTP) भेजने का लॉजिक
+  // ओटीपी भेजने का लॉजिक
   if (sendBtn) {
       sendBtn.addEventListener('click', async function() {
           const phone = document.getElementById('phone').value;
@@ -81,7 +81,6 @@
               return;
           }
 
-          // 6 अंकों का रैंडम OTP जनरेट करना
           generatedOtp = Math.floor(100000 + Math.random() * 900000);
           const apiKey = 'cDKq0yIP52CxLmdSTbrtVHOUNQw8fhJ'; 
           const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${generatedOtp}&numbers=${phone}`;
@@ -95,7 +94,7 @@
       });
   }
 
-  // फॉर्म सबमिट और Supabase डेटा सेव लॉजिक
+  // फॉर्म सबमिट और डेटा सेव लॉजिक
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
@@ -107,11 +106,9 @@
           return;
       }
 
-      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const phone = document.getElementById('phone').value;
 
-      // Supabase में सही फोन नंबर और पासवर्ड सेव करना
       const { data, error } = await _supabase
         .from('users')
         .insert([
