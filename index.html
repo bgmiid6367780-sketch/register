@@ -1,131 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Rk Pay</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+    }
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 400px;
+      padding: 25px 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+    .header h2 {
+      color: #0b5030;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 14px 14px 45px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      background: #fafafa;
+    }
+    .input-group input:focus {
+      border-color: #0b5030;
+      background: #fff;
+    }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+    }
+    .otp-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+    .otp-wrapper input {
+      flex: 1;
+    }
+    .btn-otp {
+      background: #0b5030;
+      color: #fff;
+      border: none;
+      padding: 0 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #0b5030;
+      color: #ffffff;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-submit:active, .btn-otp:active {
+      opacity: 0.9;
+    }
+    .msg-box {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+    .msg-success {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+    .msg-error {
+      background: #f8d7da;
+      color: #842029;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="register-container">
-        <!-- Top Navigation -->
-        <div class="header">
-            <a href="#" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-            <h2>Register</h2>
-            <div class="spacer"></div>
-        </div>
+<div class="card">
+  <div class="header">
+    <h2>Register</h2>
+  </div>
 
-        <!-- Form Elements -->
-        <form id="loginForm">
-            
-            <!-- User Name -->
-            <div class="input-group">
-                <i class="fa-regular fa-user icon"></i>
-                <input type="text" id="username" placeholder="User Name" required>
-            </div>
-
-            <!-- Password -->
-            <div class="input-group">
-                <i class="fa-solid fa-lock icon"></i>
-                <input type="password" id="password" placeholder="Password" required>
-            </div>
-
-            <!-- Phone Number -->
-            <div class="input-group phone-group">
-                <i class="fa-solid fa-phone icon"></i>
-                <span class="country-code">+91</span>
-                <input type="tel" id="phone" placeholder="Phone" required>
-            </div>
-
-            <!-- OTP Code -->
-            <div class="input-group otp-group">
-                <i class="fa-regular fa-envelope icon"></i>
-                <input type="text" id="otpCode" placeholder="OTP Code" required>
-                <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
-            </div>
-
-            <!-- Invite Code -->
-            <div class="input-group">
-                <i class="fa-solid fa-link icon"></i>
-                <input type="text" id="inviteCode" placeholder="Invite Code">
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="signup-btn">Sign Up</button>
-
-        </form>
+  <form id="regForm">
+    <!-- Phone Number -->
+    <div class="input-group">
+      <span class="input-icon">👤</span>
+      <input type="tel" id="phone" placeholder="मोबाइल नंबर" required maxlength="10">
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Password -->
+    <div class="input-group">
+      <span class="input-icon">🔒</span>
+      <input type="password" id="password" placeholder="पासवर्ड" required>
+    </div>
+
+    <!-- OTP Field -->
+    <div class="input-group otp-wrapper">
+      <div style="position: relative; flex: 1;">
+        <span class="input-icon">💬</span>
+        <input type="text" id="otpInput" placeholder="OTP दर्ज करें" required maxlength="6">
+      </div>
+      <button type="button" class="btn-otp" id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <!-- Invite Code -->
+    <div class="input-group">
+      <span class="input-icon">🔗</span>
+      <input type="text" id="inviteCode" placeholder="Invite Code (ऐच्छिक)">
+    </div>
+
+    <button type="submit" class="btn-submit">Sign Up</button>
+  </form>
+
+  <div id="statusMsg" class="msg-box"></div>
+</div>
+
 <script>
-  // Supabase कनेक्शन सेटअप
-  const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
-  const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
-  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  let generatedOTP = null;
+  const FAST2SMS_API_KEY = "cDKq0yIP52CxLmdSTbrtVHOuNQw8fhJZanAX37kvBiRE4p1e6zn51FGKgZeBofQwIjA8ylNtpRrhvW97";
+  const SUPABASE_URL = "https://epktoxtdzinybptgdhdu.supabase.co/rest/v1/users";
+  
+  function showMsg(text, isError = false) {
+    const msgDiv = document.getElementById("statusMsg");
+    msgDiv.innerText = text;
+    msgDiv.className = "msg-box " + (isError ? "msg-error" : "msg-success");
+    msgDiv.style.display = "block";
+  }
 
-  let generatedOtp = null;
-  const sendBtn = document.getElementById('sendOtpBtn');
-  const form = document.getElementById('loginForm');
+  // Fast2SMS OTP Sending Function
+  function sendOTP() {
+    const phone = document.getElementById("phone").value.trim();
+    if (!phone || phone.length !== 10 || isNaN(phone)) {
+      showMsg("कृपया 10 अंकों का सही मोबाइल नंबर डालें!", true);
+      return;
+    }
 
-  // ओटीपी भेजने का लॉजिक
-  if (sendBtn) {
-      sendBtn.addEventListener('click', async function() {
-          const phone = document.getElementById('phone').value;
+    // Generate 6 Digit Random OTP
+    generatedOTP = Math.floor(100000 + Math.random() * 900000);
 
-          if (!phone || phone.length < 10) {
-              alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
-              return;
+    const btn = document.getElementById("sendOtpBtn");
+    btn.disabled = true;
+    btn.innerText = "भेज रहे हैं...";
+
+    // Fast2SMS API URL
+    const smsUrl = `https://www.fast2sms.com/dev/bulkV2?authorization=${FAST2SMS_API_KEY}&route=otp&variables_values=${generatedOTP}&numbers=${phone}`;
+
+    // Trigger Request to Send SMS
+    fetch(smsUrl, { mode: 'no-cors' })
+      .then(() => {
+        showMsg("OTP आपके मोबाइल नंबर पर SMS द्वारा भेज दिया गया है!");
+        let seconds = 60;
+        const timer = setInterval(() => {
+          seconds--;
+          btn.innerText = `${seconds}s में पुनः भेजें`;
+          if (seconds <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.innerText = "Send OTP";
           }
-
-          generatedOtp = Math.floor(100000 + Math.random() * 900000);
-          const apiKey = 'cDKq0yIP52CxLmdSTbrtVHOUNQw8fhJ'; 
-          const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${generatedOtp}&numbers=${phone}`;
-
-          try {
-              const res = await fetch(url);
-              alert("OTP भेज दिया गया है! (OTP: " + generatedOtp + ")");
-          } catch (error) {
-              alert("OTP जनरेट हो गया: " + generatedOtp);
-          }
+        }, 1000);
+      })
+      .catch((err) => {
+        showMsg("OTP भेजने में समस्या आई, कृपया पुनः प्रयास करें।", true);
+        btn.disabled = false;
+        btn.innerText = "Send OTP";
       });
   }
 
-  // फॉर्म सबमिट और डेटा सेव लॉजिक
-  if (form) {  
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault(); 
+  // Registration Submit Function
+  document.getElementById("regForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-      const enteredOtp = document.getElementById('otpCode').value;
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const userOtp = document.getElementById("otpInput").value.trim();
+    const inviteCode = document.getElementById("inviteCode").value.trim();
 
-      if (generatedOtp && enteredOtp !== String(generatedOtp)) {
-          alert('भाई, गलत OTP डाला है! फिर से चेक कर.');
-          return;
-      }
+    if (!generatedOTP || userOtp != generatedOTP) {
+      showMsg("गलत OTP दर्ज किया गया है!", true);
+      return;
+    }
 
-      const password = document.getElementById('password').value;
-      const phone = document.getElementById('phone').value;
+    showMsg("रजिस्ट्रेशन हो रहा है, कृपया प्रतीक्षा करें...");
 
-      const { data, error } = await _supabase
-        .from('users')
-        .insert([
-          { 
-            phone_number: phone, 
-            password_hash: password 
-          }
-        ]);
-
-      if (error) {
-        alert('डेटा सेव करने में दिक्कत आई: ' + error.message);
+    // Supabase DB Entry
+    fetch(SUPABASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({
+        phone_number: phone,
+        password: password,
+        invite_code: inviteCode
+      })
+    })
+    .then(async (response) => {
+      if (response.ok) {
+        showMsg("रजिस्ट्रेशन सफलतापूर्वक हो गया!");
+        document.getElementById("regForm").reset();
+        generatedOTP = null;
       } else {
-        alert('डेटा सफलतापूर्वक सेव हो गया!');
-        form.reset();
+        const errData = await response.json();
+        if (errData.message && errData.message.includes("users_phone_number_key")) {
+          showMsg("यह मोबाइल नंबर पहले से रजिस्टर्ड है!", true);
+        } else {
+          showMsg("डेटा सेव करने में दिक्कत आई: " + (errData.message || "त्रुटि हुई"), true);
+        }
       }
+    })
+    .catch(() => {
+      showMsg("नेटवर्क एरर! कृपया दोबारा कोशिश करें।", true);
     });
-  }
+  });
 </script>
 
 </body>
