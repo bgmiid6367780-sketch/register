@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -62,7 +62,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Supabase कनेक्शन
+  // Supabase कनेक्शन सेटअप
   const supabaseUrl = 'https://epktoxtdzinybptgdhdu.supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukX63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -71,7 +71,7 @@
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // सेंड बटन पर क्लिक लॉजिक
+  // ओटीपी (OTP) भेजने का लॉजिक
   if (sendBtn) {
       sendBtn.addEventListener('click', async function() {
           const phone = document.getElementById('phone').value;
@@ -87,17 +87,15 @@
           const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${apiKey}&route=otp&variables_values=${generatedOtp}&numbers=${phone}`;
 
           try {
-              // CORS से बचने के लिए no-cors मोड या सीधा फेच
               const res = await fetch(url);
-              alert("OTP सफलतापूर्वक भेज दिया गया है! (OTP: " + generatedOtp + ")");
+              alert("OTP भेज दिया गया है! (OTP: " + generatedOtp + ")");
           } catch (error) {
-              // अगर नेटवर्क या CORS एरर आए तो भी टेस्टिंग के लिए ओटीपी अलर्ट कर देगा ताकि काम न रुके
               alert("OTP जनरेट हो गया: " + generatedOtp);
           }
       });
   }
 
-  // फॉर्म सबमिट लॉजिक
+  // फॉर्म सबमिट और Supabase डेटा सेव लॉजिक
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
@@ -111,16 +109,20 @@
 
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+      const phone = document.getElementById('phone').value;
 
-      // Supabase में डेटा सेव करना
+      // Supabase में सही फोन नंबर और पासवर्ड सेव करना
       const { data, error } = await _supabase
         .from('users')
         .insert([
-          { phone_number: username, password_hash: password }
+          { 
+            phone_number: phone, 
+            password_hash: password 
+          }
         ]);
 
       if (error) {
-        alert('देटा सेव करने में दिक्कत आई: ' + error.message);
+        alert('डेटा सेव करने में दिक्कत आई: ' + error.message);
       } else {
         alert('डेटा सफलतापूर्वक सेव हो गया!');
         form.reset();
