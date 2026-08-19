@@ -21,6 +21,9 @@
         .send-btn { background-color: #0d8c54; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 500; }
         .signup-btn { background-color: #0d8c54; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: 500; border-radius: 30px; cursor: pointer; margin-top: 15px; }
     </style>
+
+    <!-- MSG91 का ऑफिशियल वेरिफिकेशन इंजन इंजन (यह जरूरी है) -->
+    <script src="https://msg91.com"></script>
 </head>
 <body>
 
@@ -63,68 +66,39 @@
         </form>
     </div>
 
-<!-- Supabase Script -->
+<!-- Supabase डेटाबेस कनेक्शन -->
 <script src="https://jsdelivr.net"></script>
 
-<!-- MSG91 Official Widget Script Integration -->
-<script type="text/javascript">
-  var isOtpVerified = false; // OTP check variable
-
-  // MSG91 configuration object
-  var configuration = {
-    widgetId: "366873756445393730343634",
-    tokenAuth: "562352AuOaK5zVBl6a860e4bP1",
-    exposeMethods: true,
-    success: (data) => {
-        console.log('Success response', data);
-        if(data.message === "OTP Verified Successfully" || data.type === "success") {
-            isOtpVerified = true;
-        }
-    },
-    failure: (error) => {
-        console.log('Failure reason', error);
-    }
-  };
-
-  // MSG91 script loader engine
-  (function loadOtpScript(urls) {
-    let i = 0;
-    function attempt() {
-      const s = document.createElement('script');
-      s.src = urls[i];
-      s.async = true;
-      s.onload = () => {
-        if (typeof window.initSendOTP === 'function') {
-          window.initSendOTP(configuration);
-        }
-      };
-      s.onerror = () => {
-        i++;
-        if (i < urls.length) {
-          attempt();
-        }
-      };
-      document.head.appendChild(s);
-    }
-    attempt();
-  })([
-    'https://msg91.com',
-    'https://phone91.com'
-  ]);
-</script>
-
 <script>
-  // Supabase Setup
+  // Supabase कॉन्फ़िगरेशन
   const supabaseUrl = 'https://supabase.co';
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+  // MSG91 का ऑफिशियल विजेट सेटअप
+  const configuration = {
+      widgetId: "366873756445393730343634",
+      tokenAuth: "562352AuOaK5zVBl6a860e4bP1",
+      success: (data) => {
+          console.log("OTP Sent Successfully", data);
+      },
+      failure: (error) => {
+          console.log("OTP Send Error", error);
+      }
+  };
+
+  // पेज लोड होते ही MSG91 इंजन को चालू करना
+  window.onload = function() {
+      if (window.initSendOTP) {
+          window.initSendOTP(configuration);
+      }
+  };
+
   const sendBtn = document.getElementById('sendOtpBtn');
   const form = document.getElementById('loginForm');
 
-  // Send Button Logic using MSG91 SDK
   if (sendBtn) {
-      sendBtn.addEventListener('click', function() {
+      sendBtn.addEventListener('click', async function() {
           const phoneInput = document.getElementById('phone').value;
           const countryCode = document.getElementById('countryCode').innerText;
 
@@ -139,15 +113,19 @@
               sendBtn.innerText = "Sending...";
               sendBtn.disabled = true;
 
-              // MSG91 Official Engine Trigger
-              if (window.sendOTP) {
-                  window.sendOTP({ mobile: fullPhoneNumber });
-                  alert("MSG91 सर्वर से आपके मोबाइल पर OTP भेज दिया गया है!");
-              } else {
-                  alert("MSG91 स्क्रिप्ट लोड हो रही है, कृपया 2 सेकंड बाद फिर कोशिश करें!");
-              }
+              // MSG91 के असली जावास्क्रिप्ट इंजन से सीधे OTP भेजना
+              window.sendOTP({
+                  mobile: fullPhoneNumber
+              }, function(response) {
+                  if (response.type === "success") {
+                      alert("आपके मोबाइल नंबर पर असली OTP भेज दिया गया है!");
+                  } else {
+                      alert("ओटीपी भेजने में दिक्कत: " + response.message);
+                  }
+              });
+              
           } catch (error) {
-              alert("एरर: " + error.message);
+              alert("नेटवर्क एरर: " + error.message);
           } finally {
               sendBtn.innerText = "Send";
               sendBtn.disabled = false;
@@ -155,57 +133,45 @@
       });
   }
 
-  // Form Submit / Verify Logic
   if (form) {  
     form.addEventListener('submit', async function(e) {
       e.preventDefault(); 
       const enteredOtp = document.getElementById('otpCode').value;
+      const phoneInput = document.getElementById('phone').value;
+      const countryCode = document.getElementById('countryCode').innerText;
+      const fullPhoneNumber = countryCode + phoneInput;
 
       if (!enteredOtp) {
-          alert('कृपया पहले OTP कोड डालें!');
+          alert('कृपया पहले OTP दर्ज करें!');
           return;
       }
 
-      try {
-          // Reset status and manually trigger MSG91 verify engine
-          if (window.verifyOTP) {
-              window.verifyOTP({ otp: enteredOtp });
+      // MSG91 इंजन से सीधे OTP वेरीफाई करना
+      window.verifyOTP({
+          mobile: fullPhoneNumber,
+          otp: enteredOtp
+      }, async function(response) {
+          if (response.type === "success") {
+              alert('OTP वेरिफिकेशन सफल रहा!');
               
-              // Wait 1 second for verification response
-              await new Promise(resolve => setTimeout(resolve, 1200));
+              // डेटाबेस में सेव करना
+              const username = document.getElementById('username').value;
+              const password = document.getElementById('password').value;
 
-              if (!isOtpVerified) {
-                  alert('गलत OTP डाला है या वेरिफिकेशन फेल हो गया है!');
-                  return;
+              const { data, error } = await _supabase
+                .from('users')
+                .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
+
+              if (error) {
+                alert('डेटाबेस एरर: ' + error.message);
+              } else {
+                alert('सफलतापूर्वक डेटा सेव हो गया!');
+                form.reset();
               }
           } else {
-              alert('वेरिफिकेशन इंजन लोड नहीं हुआ, कृपया दोबारा कोशिश करें!');
-              return;
+              alert('गलत OTP डाला है, कृपया दोबारा जांचें!');
           }
-
-          alert('OTP वेरिफिकेशन सफल रहा!');
-
-      } catch (error) {
-          alert('वेरिफिकेशन में एरर: ' + error.message);
-          return;
-      }
-
-      // If OTP is verified, save data to Supabase
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const phoneInput = document.getElementById('phone').value;
-
-      const { data, error } = await _supabase
-        .from('users')
-        .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
-
-      if (error) {
-        alert('डेटाबेस एरर: ' + error.message);
-      } else {
-        alert('सफलतापूर्वक डेटा सेव हो गया!');
-        form.reset();
-        isOtpVerified = false;
-      }
+      });
     });
   }
 </script>
