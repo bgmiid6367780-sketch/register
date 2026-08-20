@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -18,12 +18,11 @@
         .input-group .icon { color: #0d8c54; font-size: 18px; margin-right: 12px; width: 20px; text-align: center; }
         .input-group input { border: none; outline: none; width: 100%; font-size: 15px; color: #333; }
         .phone-group .country-code { font-size: 15px; font-weight: 600; color: #0d8c54; margin-right: 10px; padding-right: 10px; border-right: 1px solid #e2e8f0; }
-        .send-btn { background-color: #0d8c54; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 500; }
         .signup-btn { background-color: #0d8c54; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: 500; border-radius: 30px; cursor: pointer; margin-top: 15px; }
     </style>
 
-    <!-- MSG91 का ऑफिशियल वेरिफिकेशन इंजन इंजन (यह जरूरी है) -->
-    <script src="https://msg91.com"></script>
+    <!-- 1. MSG91 का एकदम सही और असली विजेट स्क्रिप्ट -->
+    <script type="text/javascript" src="https://control.msg91.com/app/assets/otp-provider/otp-provider.js"></script>
 </head>
 <body>
 
@@ -45,16 +44,11 @@
                 <input type="password" id="password" placeholder="Password" required>
             </div>
 
+            <!-- विजेट अपने आप इस फोन इनपुट के साथ जुड़ जाएगा -->
             <div class="input-group phone-group">
                 <i class="fa-solid fa-phone icon"></i>
-                <span class="country-code" id="countryCode">91</span>
-                <input type="tel" id="phone" placeholder="Phone" required>
-            </div>
-
-            <div class="input-group otp-group">
-                <i class="fa-regular fa-envelope icon"></i>
-                <input type="text" id="otpCode" placeholder="OTP Code" required>
-                <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
+                <span class="country-code" id="countryCode">+91</span>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
             </div>
 
             <div class="input-group">
@@ -62,118 +56,58 @@
                 <input type="text" id="inviteCode" placeholder="Invite Code">
             </div>
 
-            <button type="submit" class="signup-btn">Sign Up</button>
+            <!-- पुराना OTP बॉक्स और Send बटन हटा दिया है, क्योंकि MSG91 विजेट अपना खुद का सिस्टम दिखाएगा -->
         </form>
     </div>
 
-<!-- Supabase डेटाबेस कनेक्शन -->
-<script src="https://jsdelivr.net"></script>
+<!-- 2. Supabase का असली और सही स्क्रिप्ट लिंक -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
   // Supabase कॉन्फ़िगरेशन
-  const supabaseUrl = 'https://supabase.co';
+  const supabaseUrl = 'https://supabase.co'; // ध्यान दें: यहाँ अपना असली Supabase Project URL डालें
   const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
   const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // MSG91 का ऑफिशियल विजेट सेटअप
-  const configuration = {
-      widgetId: "366873756445393730343634",
-      tokenAuth: "562352AuOaK5zVBl6a860e4bP1",
-      success: (data) => {
-          console.log("OTP Sent Successfully", data);
+  // 3. MSG91 विजेट का सही सेटअप
+  var configuration = {
+      widgetId: "366873756445393730343634", // तेरी दी हुई Widget ID
+      tokenAuth: "562352AuOaK5zVBl6a860e4bP1", // तेरा Auth Token
+      identifier: "phone", // यह विजेट को बताएगा कि फोन नंबर किस बॉक्स से लेना है
+      success: async (data) => {
+          // यह हिस्सा तब चलेगा जब यूज़र सही OTP डाल देगा!
+          console.log("OTP Verified Successfully", data);
+          
+          const username = document.getElementById('username').value;
+          const phoneInput = document.getElementById('phone').value;
+          const password = document.getElementById('password').value;
+
+          // डेटाबेस में सेव करना
+          const { data: dbData, error } = await _supabase
+            .from('users')
+            .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
+
+          if (error) {
+            alert('डेटाबेस एरर: ' + error.message);
+          } else {
+            alert('सुपर! रजिस्ट्रेशन सफलतापूर्वक हो गया!');
+            document.getElementById('loginForm').reset();
+          }
       },
       failure: (error) => {
-          console.log("OTP Send Error", error);
+          console.log("OTP Error", error);
+          alert("दिक्कत आई: " + error.message);
       }
   };
 
-  // पेज लोड होते ही MSG91 इंजन को चालू करना
+  // 4. पेज लोड होते ही विजेट चालू करना
   window.onload = function() {
-      if (window.initSendOTP) {
-          window.initSendOTP(configuration);
+      if (typeof initSendOTP === "function") {
+          initSendOTP(configuration);
+      } else {
+          alert("MSG91 विजेट लोड नहीं हो पाया, इंटरनेट कनेक्शन चेक करें।");
       }
   };
-
-  const sendBtn = document.getElementById('sendOtpBtn');
-  const form = document.getElementById('loginForm');
-
-  if (sendBtn) {
-      sendBtn.addEventListener('click', async function() {
-          const phoneInput = document.getElementById('phone').value;
-          const countryCode = document.getElementById('countryCode').innerText;
-
-          if (!phoneInput || phoneInput.length < 10) {
-              alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
-              return;
-          }
-
-          const fullPhoneNumber = countryCode + phoneInput;
-
-          try {
-              sendBtn.innerText = "Sending...";
-              sendBtn.disabled = true;
-
-              // MSG91 के असली जावास्क्रिप्ट इंजन से सीधे OTP भेजना
-              window.sendOTP({
-                  mobile: fullPhoneNumber
-              }, function(response) {
-                  if (response.type === "success") {
-                      alert("आपके मोबाइल नंबर पर असली OTP भेज दिया गया है!");
-                  } else {
-                      alert("ओटीपी भेजने में दिक्कत: " + response.message);
-                  }
-              });
-              
-          } catch (error) {
-              alert("नेटवर्क एरर: " + error.message);
-          } finally {
-              sendBtn.innerText = "Send";
-              sendBtn.disabled = false;
-          }
-      });
-  }
-
-  if (form) {  
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault(); 
-      const enteredOtp = document.getElementById('otpCode').value;
-      const phoneInput = document.getElementById('phone').value;
-      const countryCode = document.getElementById('countryCode').innerText;
-      const fullPhoneNumber = countryCode + phoneInput;
-
-      if (!enteredOtp) {
-          alert('कृपया पहले OTP दर्ज करें!');
-          return;
-      }
-
-      // MSG91 इंजन से सीधे OTP वेरीफाई करना
-      window.verifyOTP({
-          mobile: fullPhoneNumber,
-          otp: enteredOtp
-      }, async function(response) {
-          if (response.type === "success") {
-              alert('OTP वेरिफिकेशन सफल रहा!');
-              
-              // डेटाबेस में सेव करना
-              const username = document.getElementById('username').value;
-              const password = document.getElementById('password').value;
-
-              const { data, error } = await _supabase
-                .from('users')
-                .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
-
-              if (error) {
-                alert('डेटाबेस एरर: ' + error.message);
-              } else {
-                alert('सफलतापूर्वक डेटा सेव हो गया!');
-                form.reset();
-              }
-          } else {
-              alert('गलत OTP डाला है, कृपया दोबारा जांचें!');
-          }
-      });
-    });
-  }
 </script>
 </body>
 </html>
