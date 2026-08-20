@@ -13,101 +13,51 @@
         .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 35px; }
         .header h2 { color: #0d8c54; font-size: 22px; font-weight: 600; }
         .back-btn { color: #0d8c54; font-size: 20px; text-decoration: none; }
-        .spacer { width: 20px; }
         .input-group { display: flex; align-items: center; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; margin-bottom: 20px; background-color: #ffffff; }
         .input-group .icon { color: #0d8c54; font-size: 18px; margin-right: 12px; width: 20px; text-align: center; }
         .input-group input { border: none; outline: none; width: 100%; font-size: 15px; color: #333; }
-        .phone-group .country-code { font-size: 15px; font-weight: 600; color: #0d8c54; margin-right: 10px; padding-right: 10px; border-right: 1px solid #e2e8f0; }
+        .send-btn { background-color: #0d8c54; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; margin-left: 10px; }
         .signup-btn { background-color: #0d8c54; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: 500; border-radius: 30px; cursor: pointer; margin-top: 15px; }
     </style>
-
-    <!-- 1. MSG91 का एकदम सही और असली विजेट स्क्रिप्ट -->
-    <script type="text/javascript" src="https://control.msg91.com/app/assets/otp-provider/otp-provider.js"></script>
 </head>
 <body>
-
     <div class="register-container">
         <div class="header">
             <a href="#" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
             <h2>Register</h2>
-            <div class="spacer"></div>
         </div>
-
         <form id="loginForm">
             <div class="input-group">
                 <i class="fa-regular fa-user icon"></i>
                 <input type="text" id="username" placeholder="User Name" required>
             </div>
-
             <div class="input-group">
-                <i class="fa-solid fa-lock icon"></i>
-                <input type="password" id="password" placeholder="Password" required>
-            </div>
-
-            <!-- विजेट अपने आप इस फोन इनपुट के साथ जुड़ जाएगा -->
-            <div class="input-group phone-group">
                 <i class="fa-solid fa-phone icon"></i>
-                <span class="country-code" id="countryCode">+91</span>
                 <input type="tel" id="phone" placeholder="Phone Number" required>
             </div>
-
             <div class="input-group">
-                <i class="fa-solid fa-link icon"></i>
-                <input type="text" id="inviteCode" placeholder="Invite Code">
+                <i class="fa-regular fa-envelope icon"></i>
+                <input type="text" id="otpCode" placeholder="OTP Code">
+                <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
-
-            <!-- पुराना OTP बॉक्स और Send बटन हटा दिया है, क्योंकि MSG91 विजेट अपना खुद का सिस्टम दिखाएगा -->
+            <button type="submit" class="signup-btn">Sign Up</button>
         </form>
     </div>
 
-<!-- 2. Supabase का असली और सही स्क्रिप्ट लिंक -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-  // Supabase कॉन्फ़िगरेशन
-  const supabaseUrl = 'https://supabase.co'; // ध्यान दें: यहाँ अपना असली Supabase Project URL डालें
-  const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
-  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-  // 3. MSG91 विजेट का सही सेटअप
-  var configuration = {
-      widgetId: "366873756445393730343634", // तेरी दी हुई Widget ID
-      tokenAuth: "562352AuOaK5zVBl6a860e4bP1", // तेरा Auth Token
-      identifier: "phone", // यह विजेट को बताएगा कि फोन नंबर किस बॉक्स से लेना है
-      success: async (data) => {
-          // यह हिस्सा तब चलेगा जब यूज़र सही OTP डाल देगा!
-          console.log("OTP Verified Successfully", data);
-          
-          const username = document.getElementById('username').value;
-          const phoneInput = document.getElementById('phone').value;
-          const password = document.getElementById('password').value;
-
-          // डेटाबेस में सेव करना
-          const { data: dbData, error } = await _supabase
-            .from('users')
-            .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
-
-          if (error) {
-            alert('डेटाबेस एरर: ' + error.message);
-          } else {
-            alert('सुपर! रजिस्ट्रेशन सफलतापूर्वक हो गया!');
-            document.getElementById('loginForm').reset();
-          }
-      },
-      failure: (error) => {
-          console.log("OTP Error", error);
-          alert("दिक्कत आई: " + error.message);
-      }
-  };
-
-  // 4. पेज लोड होते ही विजेट चालू करना
-  window.onload = function() {
-      if (typeof initSendOTP === "function") {
-          initSendOTP(configuration);
-      } else {
-          alert("MSG91 विजेट लोड नहीं हो पाया, इंटरनेट कनेक्शन चेक करें।");
-      }
-  };
-</script>
+    <script>
+        document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+            const phone = document.getElementById('phone').value;
+            alert("OTP भेजने की कोशिश कर रहा हूँ...");
+            try {
+                const res = await fetch('/api/send-otp', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ mobile: phone })
+                });
+                const data = await res.json();
+                alert(data.success ? "OTP भेज दिया गया है!" : "Error: " + data.message);
+            } catch (e) { alert("Error: " + e.message); }
+        });
+    </script>
 </body>
 </html>
