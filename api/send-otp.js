@@ -7,16 +7,21 @@ export default async function handler(req, res) {
   const authKey = process.env.MSG91_AUTH_KEY;
 
   try {
-    // यहाँ हमने API का तरीका थोड़ा बदल दिया है
-    const url = `https://control.msg91.com/api/v5/otp?mobile=91${mobile}&authkey=${authKey}&otp_length=4&template_id=`; // खाली template_id भेजा है
-    const response = await fetch(url, { method: 'POST' });
+    // MSG91 WhatsApp OTP API Endpoint
+    // ध्यान दें: यहाँ हमने चैनल 'whatsapp' सेट किया है
+    const url = `https://control.msg91.com/api/v5/otp?mobile=91${mobile}&authkey=${authKey}&otp_length=4&channel=4`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
     const data = await response.json();
 
-    // अब अगर कोई भी एरर होगा तो ये हमें साफ़-साफ़ बता देगा
-    if (data.type === 'success') {
-      return res.status(200).json({ success: true, message: 'OTP भेज दिया गया है!' });
+    if (data.type === 'success' || data.status === 'success') {
+      return res.status(200).json({ success: true, message: 'WhatsApp पर OTP भेज दिया गया है!' });
     } else {
-      return res.status(200).json({ success: false, message: JSON.stringify(data) });
+      return res.status(400).json({ success: false, message: data.message || 'WhatsApp OTP भेजने में विफल!' });
     }
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
