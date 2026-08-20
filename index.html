@@ -13,51 +13,132 @@
         .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 35px; }
         .header h2 { color: #0d8c54; font-size: 22px; font-weight: 600; }
         .back-btn { color: #0d8c54; font-size: 20px; text-decoration: none; }
+        .spacer { width: 20px; }
         .input-group { display: flex; align-items: center; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; margin-bottom: 20px; background-color: #ffffff; }
         .input-group .icon { color: #0d8c54; font-size: 18px; margin-right: 12px; width: 20px; text-align: center; }
         .input-group input { border: none; outline: none; width: 100%; font-size: 15px; color: #333; }
+        .phone-group .country-code { font-size: 15px; font-weight: 600; color: #0d8c54; margin-right: 10px; padding-right: 10px; border-right: 1px solid #e2e8f0; }
+        .otp-group input { width: 60%; }
         .send-btn { background-color: #0d8c54; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; margin-left: 10px; }
         .signup-btn { background-color: #0d8c54; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: 500; border-radius: 30px; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
+
     <div class="register-container">
         <div class="header">
             <a href="#" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
             <h2>Register</h2>
+            <div class="spacer"></div>
         </div>
+
         <form id="loginForm">
             <div class="input-group">
                 <i class="fa-regular fa-user icon"></i>
                 <input type="text" id="username" placeholder="User Name" required>
             </div>
+
             <div class="input-group">
+                <i class="fa-solid fa-lock icon"></i>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+
+            <div class="input-group phone-group">
                 <i class="fa-solid fa-phone icon"></i>
+                <span class="country-code" id="countryCode">91</span>
                 <input type="tel" id="phone" placeholder="Phone Number" required>
             </div>
-            <div class="input-group">
+
+            <div class="input-group otp-group">
                 <i class="fa-regular fa-envelope icon"></i>
-                <input type="text" id="otpCode" placeholder="OTP Code">
+                <input type="text" id="otpCode" placeholder="OTP Code" required>
                 <button type="button" class="send-btn" id="sendOtpBtn">Send</button>
             </div>
+
+            <div class="input-group">
+                <i class="fa-solid fa-link icon"></i>
+                <input type="text" id="inviteCode" placeholder="Invite Code">
+            </div>
+
             <button type="submit" class="signup-btn">Sign Up</button>
         </form>
     </div>
 
-    <script>
-        document.getElementById('sendOtpBtn').addEventListener('click', async () => {
-            const phone = document.getElementById('phone').value;
-            alert("OTP भेजने की कोशिश कर रहा हूँ...");
-            try {
-                const res = await fetch('/api/send-otp', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ mobile: phone })
-                });
-                const data = await res.json();
-                alert(data.success ? "OTP भेज दिया गया है!" : "Error: " + data.message);
-            } catch (e) { alert("Error: " + e.message); }
-        });
-    </script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  // Supabase कॉन्फ़िगरेशन
+  const supabaseUrl = 'https://supabase.co'; // जरूरत पड़ने पर अपना असली URL यहाँ रखें
+  const supabaseKey = 'sb_publishable_pQBVukXk63ShneEauRMZYw_F9NyOQ69';
+  const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+  const sendBtn = document.getElementById('sendOtpBtn');
+  const form = document.getElementById('loginForm');
+
+  // 1. Send बटन पर क्लिक होने पर Vercel बैकएंड को OTP भेजने की रिक्वेस्ट भेजना
+  if (sendBtn) {
+      sendBtn.addEventListener('click', async function() {
+          const phoneInput = document.getElementById('phone').value;
+
+          if (!phoneInput || phoneInput.length < 10) {
+              alert('कृपया सही 10 अंकों का मोबाइल नंबर डालें!');
+              return;
+          }
+
+          try {
+              sendBtn.innerText = "Sending...";
+              sendBtn.disabled = true;
+
+              const response = await fetch('/api/send-otp', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ mobile: phoneInput })
+              });
+
+              const result = await response.json();
+
+              if (response.ok && result.success) {
+                  alert("आपके मोबाइल नंबर पर OTP सफलतापूर्व भेज दिया गया है!");
+              } else {
+                  alert("OTP भेजने में दिक्कत: " + (result.message || 'अज्ञात एरर'));
+              }
+              
+          } catch (error) {
+              alert("नेटवर्क एरर: " + error.message);
+          } finally {
+              sendBtn.innerText = "Send";
+              sendBtn.disabled = false;
+          }
+      });
+  }
+
+  // 2. Sign Up बटन पर क्लिक होने पर डेटाबेस में सेव करना
+  if (form) {  
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault(); 
+      const enteredOtp = document.getElementById('otpCode').value;
+      const username = document.getElementById('username').value;
+      const phoneInput = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+
+      if (!enteredOtp) {
+          alert('कृपया पहले OTP दर्ज करें!');
+          return;
+      }
+
+      const { data, error } = await _supabase
+        .from('users')
+        .insert([{ username: username, phone_number: phoneInput, password_hash: password }]);
+
+      if (error) {
+        alert('डेटाबेस एरर: ' + error.message);
+      } else {
+        alert('सुपर! रजिस्ट्रेशन और डेटा सेव सफलतापूर्वक हो गया!');
+        form.reset();
+      }
+    });
+  }
+</script>
 </body>
 </html>
