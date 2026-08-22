@@ -1,1 +1,351 @@
-(this["webpackJsonp"]=this["webpackJsonp"]||[]).push([["app-service"],{"0272":function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var i={props:{adjustPosition:{type:Boolean,default:uni.$u.props.codeInput.adjustPosition},maxlength:{type:[String,Number],default:uni.$u.props.codeInput.maxlength},dot:{type:Boolean,default:uni.$u.props.codeInput.dot},mode:{type:String,default:uni.$u.props.codeInput.mode},hairline:{type:Boolean,default:uni.$u.props.codeInput.hairline},space:{type:[String,Number],default:uni.$u.props.codeInput.space},value:{type:[String,Number],default:uni.$u.props.codeInput.value},focus:{type:Boolean,default:uni.$u.props.codeInput.focus},bold:{type:Boolean,default:uni.$u.props.codeInput.bold},color:{type:String,default:uni.$u.props.codeInput.color},fontSize:{type:[String,Number],default:uni.$u.props.codeInput.fontSize},size:{type:[String,Number],default:uni.$u.props.codeInput.size},disabledKeyboard:{type:Boolean,default:uni.$u.props.codeInput.disabledKeyboard},borderColor:{type:String,default:uni.$u.props.codeInput.borderColor},disabledDot:{type:Boolean,default:uni.$u.props.codeInput.disabledDot}}};e.default=i},"03de":function(t,e,s){"use strict";s.r(e);var i=s("334a"),a=s("dbf8");for(var n in a)["default"].indexOf(n)<0&&function(t){s.d(e,t,(function(){return a[t]}))}(n);var r=s("828b"),o=Object(r["a"])(a["default"],i["b"],i["c"],!1,null,null,null,!1,i["a"],void 0);e["default"]=o.exports},"04f0":function(t,e,s){"use strict";s.d(e,"b",(function(){return i})),s.d(e,"c",(function(){return a})),s.d(e,"a",(function(){}));var i=function(){var t=this,e=t.$createElement,s=t._self._c||e;return s("view",{staticClass:t._$s(0,"sc","steps-grid"),attrs:{_i:0}},[s("view",{staticClass:t._$s(1,"sc","dot dot1"),class:t._$s(1,"c",[{current:t.current>=1}]),attrs:{_i:1}},[s("text")]),s("view",{staticClass:t._$s(3,"sc","line line1"),attrs:{_i:3}}),s("view",{staticClass:t._$s(4,"sc","dot dot2"),class:t._$s(4,"c",[{current:t.current>=2}]),attrs:{_i:4}},[s("text")]),s("view",{staticClass:t._$s(6,"sc","line line2"),attrs:{_i:6}}),s("view",{staticClass:t._$s(7,"sc","dot dot3"),class:t._$s(7,"c",[{current:t.current>=3}]),attrs:{_i:7}},[s("text")]),s("text",{staticClass:t._$s(9,"sc","step-text t1"),attrs:{_i:9}},[t._v(t._$s(9,"t0-0",t._s(t.labels[0]||"Phone")))]),s("text",{staticClass:t._$s(10,"sc","step-text t2"),attrs:{_i:10}},[t._v(t._$s(10,"t0-0",t._s(t.labels[1]||"Authorize")))]),s("text",{staticClass:t._$s(11,"sc","step-text t3"),attrs:{_i:11}},[t._v(t._$s(11,"t0-0",t._s(t.labels[2]||"Finish")))])])},a=[]},"0546":function(t,e,s){"use strict";s.r(e);var i=s("d387"),a=s("9afb");for(var n in a)["default"].indexOf(n)<0&&function(t){s.d(e,t,(function(){return a[t]}))}(n);var r=s("828b"),o=Object(r["a"])(a["default"],i["b"],i["c"],!1,null,"2292e5f5",null,!1,i["a"],void 0);e["default"]=o.exports},"05e0":function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;e.default={grid:{col:3,border:!1,align:"left"}}},"061b":function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;e.default={cellGroup:{title:"",border:!0,customStyle:{}}}},"072a":function(t,e,s){"use strict";(function(t){var i=s("47a9");Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var a=i(s("127e")),n=i(s("af34")),r=i(s("7ca3")),o=i(s("ee10")),c=i(s("3b2d"));function l(t,e){var s="undefined"!==typeof Symbol&&t[Symbol.iterator]||t["@@iterator"];if(!s){if(Array.isArray(t)||(s=function(t,e){if(!t)return;if("string"===typeof t)return u(t,e);var s=Object.prototype.toString.call(t).slice(8,-1);"Object"===s&&t.constructor&&(s=t.constructor.name);if("Map"===s||"Set"===s)return Array.from(t);if("Arguments"===s||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(s))return u(t,e)}(t))||e&&t&&"number"===typeof t.length){s&&(t=s);var i=0,a=function(){};return{s:a,n:function(){return i>=t.length?{done:!0}:{done:!1,value:t[i++]}},e:function(t){throw t},f:a}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var n,r=!0,o=!1;return{s:function(){s=s.call(t)},n:function(){var t=s.next();return r=t.done,t},e:function(t){o=!0,n=t},f:function(){try{r||null==s.return||s.return()}finally{if(o)throw n}}}}function u(t,e){(null==e||e>t.length)&&(e=t.length);for(var s=0,i=new Array(e);s<e;s++)i[s]=t[s];return i}function d(t,e){var s=Object.keys(t);if(Object.getOwnPropertySymbols){var i=Object.getOwnPropertySymbols(t);e&&(i=i.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),s.push.apply(s,i)}return s}function f(t){for(var e=1;e<arguments.length;e++){var s=null!=arguments[e]?arguments[e]:{};e%2?d(Object(s),!0).forEach((function(e){(0,r.default)(t,e,s[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(s)):d(Object(s)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(s,e))}))}return t}var p={name:"FreechargeAuthPage",data:function(){return{prepareParams:{ctype:2},preparing:!1,confirming:!1,checkRequesting:!1,authStarted:!1,prepareDone:!1,expired:!1,tempKey:"",authUrl:"",preparePhone:"",expireSeconds:600,expireAt:0,remainingSeconds:0,upiList:[],selectedUpiList:[],selectCfg:{loaded:!1,multi:!1,maxSelect:1},historyUpis:[],lockedUpiSet:new Set,checkMessage:"Please complete the authorization in Freecharge.",checkTimer:null,countdownTimer:null,checkErrorCount:0}},computed:{heroTitle:function(){return this.prepareDone?"Choose Your UPI":this.authStarted?"Authorization in Progress":"Freecharge Authentication"},heroSubtitle:function(){return this.prepareDone?"Select the UPI addresses you want to bind.":this.authStarted?"Return here after completing authorization in Freecharge.":"Complete authorization to retrieve your available UPI addresses."},remainingTimeText:function(){var t=Math.max(0,Number(this.remainingSeconds||0)),e=Math.floor(t/60),s=t%60;return"".concat(String(e).padStart(2,"0"),":").concat(String(s).padStart(2,"0"))},bottomButtonText:function(){return this.preparing?"Preparing...":this.confirming?"Confirming...":this.prepareDone?"Confirm":this.authStarted?"Open Freecharge Again":this.expired?"Authenticate Again":"Go to Authenticate"},bottomButtonDisabled:function(){return!(!this.preparing&&!this.confirming)||!(!this.prepareDone||0!==this.selectedUpiList.length)},lockedUpiCount:function(){return this.selectCfg.multi&&this.lockedUpiSet?this.lockedUpiSet.size:0},availableNewSlots:function(){if(!this.selectCfg.multi)return 0;var t=Math.max(1,Number(this.selectCfg.maxSelect||1));return Math.max(0,t-this.lockedUpiCount)},selectionDisplayLimit:function(){return this.selectCfg.multi?Math.max(Number(this.selectCfg.maxSelect||1),this.lockedUpiCount):1},multiSelectTip:function(){var t=Math.max(1,Number(this.selectCfg.maxSelect||1));return this.lockedUpiCount>=t?"".concat(this.lockedUpiCount," locked UPIs. No additional selection available."):"Multi-select enabled. Max ".concat(t,", ").concat(this.availableNewSlots," available.")}},onLoad:function(t){this.prepareParams=this.buildPrepareParams(t||{})},onShow:function(){if(this.authStarted&&!this.prepareDone&&!this.expired){if(this.isSessionExpired())return void this.handleSessionExpired();this.updateRemainingSeconds(),this.startCheckLoop(300)}},onHide:function(){this.clearCheckTimer()},onUnload:function(){this.clearCheckTimer(),this.clearCountdownTimer()},methods:{buildPrepareParams:function(e){var s={ctype:2};if(e.params)try{var i=decodeURIComponent(e.params),a=JSON.parse(i);a&&"object"===(0,c.default)(a)&&!Array.isArray(a)&&Object.assign(s,a)}catch(n){t("warn","Freecharge params parse failed:",n," at pages/wallet/freecharge-auth.vue:337")}return["walletId","collectionId","id","userInfoId","memberId"].forEach((function(t){void 0!==e[t]&&null!==e[t]&&""!==e[t]&&(s[t]=e[t])})),s.ctype=2,s},handleBottomSubmit:function(){this.bottomButtonDisabled||(this.prepareDone?this.confirmLink():this.authStarted&&this.authUrl&&!this.expired?this.openAuthUrl():this.startAuthentication())},resetAuthenticationState:function(){this.clearCheckTimer(),this.clearCountdownTimer(),this.authStarted=!1,this.prepareDone=!1,this.expired=!1,this.tempKey="",this.authUrl="",this.preparePhone="",this.expireSeconds=600,this.expireAt=0,this.remainingSeconds=0,this.upiList=[],this.selectedUpiList=[],this.selectCfg={loaded:!1,multi:!1,maxSelect:1},this.historyUpis=[],this.lockedUpiSet=new Set,this.checkMessage="Please complete the authorization in Freecharge.",this.checkErrorCount=0},startAuthentication:function(){var t=this;return(0,o.default)(a.default.mark((function e(){var s,i,n,r,o;return a.default.wrap((function(e){while(1)switch(e.prev=e.next){case 0:if(!t.preparing){e.next=2;break}return e.abrupt("return");case 2:return t.resetAuthenticationState(),t.preparing=!0,e.prev=4,s=f(f({},t.prepareParams),{},{ctype:2}),e.next=8,t.$api.walletApi.freePrepare(s);case 8:if(i=e.sent,t.assertApiSuccess(i,"Failed to prepare authentication"),n=i&&i.data?i.data:{},r=String(n.tempKey||"").trim(),o=String(n.url||"").trim(),r){e.next=15;break}throw new Error("TempKey is empty");case 15:if(o){e.next=17;break}throw new Error("Authentication URL is empty");case 17:t.tempKey=r,t.authUrl=o,t.preparePhone=n.phone||"",t.expireSeconds=Math.max(1,Number(n.expireSeconds||600)),t.expireAt=Date.now()+1e3*t.expireSeconds,t.remainingSeconds=t.expireSeconds,t.authStarted=!0,t.expired=!1,t.checkMessage="Please complete the authorization in Freecharge.",t.startCountdown(),t.startCheckLoop(1200),t.openAuthUrl(),e.next=35;break;case 31:e.prev=31,e.t0=e["catch"](4),t.authStarted=!1,t.showError(e.t0,"Failed to prepare authentication");case 35:return e.prev=35,t.preparing=!1,e.finish(35);case 38:case"end":return e.stop()}}),e,null,[[4,31,35,38]])})))()},openAuthUrl:function(){this.authUrl?(t("log",this.authUrl," at pages/wallet/freecharge-auth.vue:463"),this.isSessionExpired()?this.handleSessionExpired():(this.authStarted=!0,this.startCheckLoop(1200),plus.runtime.openURL(this.authUrl,(function(){uni.showToast({title:"Unable to open Freecharge",icon:"none"})})))):uni.showToast({title:"Authentication URL is empty",icon:"none"})},startCheckLoop:function(){var t=this,e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0;this.authStarted&&!this.prepareDone&&!this.expired&&this.tempKey&&(this.clearCheckTimer(),this.checkTimer=setTimeout((function(){t.checkTimer=null,t.checkAuthorization()}),Math.max(0,Number(e||0))))},clearCheckTimer:function(){this.checkTimer&&(clearTimeout(this.checkTimer),this.checkTimer=null)},checkAuthorization:function(){var e=this;return(0,o.default)(a.default.mark((function s(){var i,n,r,o,c;return a.default.wrap((function(s){while(1)switch(s.prev=s.next){case 0:if(!e.checkRequesting&&e.authStarted&&!e.prepareDone&&!e.expired&&e.tempKey){s.next=2;break}return s.abrupt("return");case 2:if(!e.isSessionExpired()){s.next=5;break}return e.handleSessionExpired(),s.abrupt("return");case 5:return e.checkRequesting=!0,s.prev=6,i={tempKey:e.tempKey},s.next=10,e.$api.kycApi.check(i);case 10:if(n=s.sent,e.assertApiSuccess(n,"Authorization check failed"),r=n&&n.data?n.data:{},o=Number(r.status),r.phone&&(e.preparePhone=r.phone),3!==o){s.next=34;break}if(c=e.normalizeUpiList(r.upiList),!(c.length>0)){s.next=31;break}return s.next=20,e.initUpiSelection(c);case 20:if(e.upiList.length){s.next=23;break}return e.checkMessage="Authorization completed. UPI list is empty.",s.abrupt("return");case 23:return e.prepareDone=!0,e.authStarted=!1,e.expired=!1,e.checkMessage="Authorization completed.",e.clearCheckTimer(),e.clearCountdownTimer(),uni.showToast({title:"Please select UPI",icon:"none"}),s.abrupt("return");case 31:e.checkMessage="Authorization completed. Loading UPI list...",s.next=36;break;case 34:e.checkErrorCount=0,e.checkMessage=r.message||r.msg||"Waiting for authorization result...";case 36:s.next=43;break;case 38:s.prev=38,s.t0=s["catch"](6),e.checkErrorCount+=1,e.checkMessage="Network is unstable. Retrying automatically...",t("warn","Freecharge authorization check failed:",s.t0," at pages/wallet/freecharge-auth.vue:579");case 43:return s.prev=43,e.checkRequesting=!1,!e.authStarted||e.prepareDone||e.expired||e.startCheckLoop(1500),s.finish(43);case 47:case"end":return s.stop()}}),s,null,[[6,38,43,47]])})))()},normalizeUpiList:function(t){if(!Array.isArray(t))return[];var e=t.map((function(t){return"string"===typeof t?t.trim():t&&"object"===(0,c.default)(t)?String(t.upi||t.vpa||t.upiId||t.upiAddress||t.address||"").trim():""})).filter(Boolean);return(0,n.default)(new Set(e))},startCountdown:function(){var t=this;this.clearCountdownTimer(),this.updateRemainingSeconds(),this.countdownTimer=setInterval((function(){t.updateRemainingSeconds()}),1e3)},clearCountdownTimer:function(){this.countdownTimer&&(clearInterval(this.countdownTimer),this.countdownTimer=null)},updateRemainingSeconds:function(){if(this.expireAt){var t=Math.ceil((this.expireAt-Date.now())/1e3);this.remainingSeconds=Math.max(0,t),t<=0&&this.authStarted&&!this.prepareDone&&this.handleSessionExpired()}else this.remainingSeconds=0},isSessionExpired:function(){return Boolean(this.expireAt&&Date.now()>=this.expireAt)},handleSessionExpired:function(){this.clearCheckTimer(),this.clearCountdownTimer(),this.authStarted=!1,this.prepareDone=!1,this.expired=!0,this.checkRequesting=!1,this.remainingSeconds=0,this.checkMessage="The authentication session has expired.",uni.showToast({title:"Authentication expired",icon:"none"})},getWalletConfigId:function(){for(var t=this.prepareParams||{},e=[t.walletId,t.id,t.ctype,2],s=0,i=e;s<i.length;s++){var a=i[s],n=Number(a);if(Number.isFinite(n)&&n>0)return n}return 2},fetchSelectCfg:function(){var e=this;return(0,o.default)(a.default.mark((function s(){var i,n,r,o,c,l,u;return a.default.wrap((function(s){while(1)switch(s.prev=s.next){case 0:return s.prev=0,i=e.getWalletConfigId(),s.next=4,e.$api.ctTypeApi.getCtTypeById(i,{});case 4:return n=s.sent,r=n&&1e3===Number(n.code),o=r&&n.data||{},c=1===Number(o.multiple),l=Number(o.multipleNum),(!Number.isFinite(l)||l<=0)&&(l=1),u=c&&l>1,u||(l=1),s.abrupt("return",{multi:u,maxSelect:l});case 15:return s.prev=15,s.t0=s["catch"](0),t("warn","Read UPI select config failed, fallback to single select:",s.t0," at pages/wallet/freecharge-auth.vue:709"),s.abrupt("return",{multi:!1,maxSelect:1});case 19:case"end":return s.stop()}}),s,null,[[0,15]])})))()},isValidUpi:function(t){var e=String(t||"").trim();return/^[a-zA-Z0-9._-]{2,64}@[a-zA-Z0-9.-]{2,64}$/.test(e)},fetchHistoryUpis:function(){var e=this;return(0,o.default)(a.default.mark((function s(){var i,n,r,o,c,u,d,f,p,h,v,m,_,g;return a.default.wrap((function(s){while(1)switch(s.prev=s.next){case 0:return s.prev=0,s.next=3,e.$api.walletApi.getWalletList({});case 3:i=s.sent,n=i&&1e3===Number(i.code),r=n&&Array.isArray(i.data)?i.data:[],o=e.getWalletConfigId(),c=String(e.preparePhone||"").trim(),u=new Set,d=[],f=l(r),s.prev=11,f.s();case 13:if((p=f.n()).done){s.next=27;break}if(v=p.value,m=Number(null===v||void 0===v||null===(h=v.wallet)||void 0===h?void 0:h.id),_=String((null===v||void 0===v?void 0:v.phone)||"").trim(),g=String((null===v||void 0===v?void 0:v.address)||"").trim(),m===o){s.next=20;break}return s.abrupt("continue",25);case 20:if(!c||!_||_===c){s.next=22;break}return s.abrupt("continue",25);case 22:if(e.isValidUpi(g)){s.next=24;break}return s.abrupt("continue",25);case 24:u.has(g)||(u.add(g),d.push(g));case 25:s.next=13;break;case 27:s.next=32;break;case 29:s.prev=29,s.t0=s["catch"](11),f.e(s.t0);case 32:return s.prev=32,f.f(),s.finish(32);case 35:return s.abrupt("return",d);case 38:return s.prev=38,s.t1=s["catch"](0),t("warn","Read bound UPI history failed:",s.t1," at pages/wallet/freecharge-auth.vue:755"),s.abrupt("return",[]);case 42:case"end":return s.stop()}}),s,null,[[0,38],[11,29,32,35]])})))()},initUpiSelection:function(t){var e=this;return(0,o.default)(a.default.mark((function s(){var i,r,o,c,l,u,d,f,p,h;return a.default.wrap((function(s){while(1)switch(s.prev=s.next){case 0:return i=e.normalizeUpiList(t).filter((function(t){return e.isValidUpi(t)})),s.next=3,e.fetchSelectCfg();case 3:if(r=s.sent,o=!(null===r||void 0===r||!r.multi),c=Math.max(1,Number((null===r||void 0===r?void 0:r.maxSelect)||1)||1),e.selectCfg={loaded:!0,multi:o,maxSelect:c},!o){s.next=13;break}return s.next=10,e.fetchHistoryUpis();case 10:s.t0=s.sent,s.next=14;break;case 13:s.t0=[];case 14:l=s.t0,e.historyUpis=l,u=new Set,d=[],f=0,p=[].concat((0,n.default)(l),(0,n.default)(i));case 19:if(!(f<p.length)){s.next=28;break}if(h=p[f],h&&!u.has(h)){s.next=23;break}return s.abrupt("continue",25);case 23:u.add(h),d.push(h);case 25:f++,s.next=19;break;case 28:if(e.upiList=d,o){s.next=33;break}return e.lockedUpiSet=new Set,e.selectedUpiList=d.length?[d[0]]:[],s.abrupt("return");case 33:e.lockedUpiSet=new Set(l),e.selectedUpiList=(0,n.default)(l),!e.selectedUpiList.length&&d.length&&(e.selectedUpiList=[d[0]]);case 36:case"end":return s.stop()}}),s)})))()},isUpiSelected:function(t){return this.selectedUpiList.includes(t)},isUpiLocked:function(t){return!!this.selectCfg.multi&&(this.lockedUpiSet&&this.lockedUpiSet.has(t))},toggleUpi:function(t){var e=this;if(t&&!this.confirming)if(this.selectCfg.multi){if(!this.isUpiLocked(t)){var s=(0,n.default)(this.selectedUpiList),i=s.indexOf(t);if(i>=0)return s.splice(i,1),void(this.selectedUpiList=s);var a=Math.max(1,Number(this.selectCfg.maxSelect||1)),r=s.filter((function(t){return!e.lockedUpiSet.has(t)})).length,o=Math.max(0,a-this.lockedUpiSet.size);r+1>o?uni.showToast({title:o>0?"You can select ".concat(o," additional UPI(s)"):"No additional UPI can be selected",icon:"none"}):(s.push(t),this.selectedUpiList=s)}}else this.selectedUpiList=[t]},confirmLink:function(){var t=this;return(0,o.default)(a.default.mark((function e(){var s,i,r,o,c,l,u;return a.default.wrap((function(e){while(1)switch(e.prev=e.next){case 0:if(!t.confirming){e.next=2;break}return e.abrupt("return");case 2:if(t.tempKey){e.next=5;break}return uni.showToast({title:"TempKey is empty",icon:"none"}),e.abrupt("return");case 5:if(t.selectedUpiList.length){e.next=8;break}return uni.showToast({title:"Please select UPI",icon:"none"}),e.abrupt("return");case 8:if(s=(0,n.default)(t.selectedUpiList),!t.selectCfg.multi){e.next=19;break}if(i=Math.max(1,Number(t.selectCfg.maxSelect||1)),r=s.filter((function(e){return t.lockedUpiSet.has(e)})).length,o=s.filter((function(e){return!t.lockedUpiSet.has(e)})).length,c=Math.max(0,i-r),!(o>c)){e.next=17;break}return uni.showToast({title:c>0?"Only ".concat(c," additional UPI(s) allowed"):"No additional UPI can be submitted",icon:"none"}),e.abrupt("return");case 17:e.next=20;break;case 19:s=s.slice(0,1);case 20:return t.confirming=!0,e.prev=21,l={tempKey:t.tempKey,upiList:s},e.next=25,t.$api.walletApi.linkConfirm(l);case 25:u=e.sent,t.assertApiSuccess(u,"Confirm failed"),uni.redirectTo({url:"/pages/wallet/add-success"}),e.next=33;break;case 30:e.prev=30,e.t0=e["catch"](21),t.showError(e.t0,"Confirm failed");case 33:return e.prev=33,t.confirming=!1,e.finish(33);case 36:case"end":return e.stop()}}),e,null,[[21,30,33,36]])})))()},assertApiSuccess:function(t,e){if(t&&void 0!==t.code&&1e3!==Number(t.code))throw new Error(t.msg||t.message||e)},showError:function(t,e){var s=t&&(t.msg||t.message)||e||"Request failed";uni.showToast({title:String(s),icon:"none"})}}};e.default=p}).call(this,s("f3b9")["default"])},"07a7":function(t,e,s){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;e.default={code:{seconds:60,startText:"\u83b7\u53d6\u9a8c\u8bc1\u7801",changeText:"X\u79d2\u91cd\u65b0\u83b7\u53d6",endText:"\u91cd\u65b0\u83b7\u53d6",keepRunning:!1,uniqueKey:""}}},"07c2":function(t,e,s){"use strict";var i;Object.defineProperty(e,"__esModule",{value:!0}),e.default=void 0;var a=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:500,s=!(arguments.length>2&&vo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiwaPay</title>
+    <!-- Vue.js CDN -->
+    <script src="https://unpkg.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8faff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8faff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #1a56da, #ff9800);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .rupee-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #ff9800;
+            color: white;
+            font-size: 14px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid white;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a56da;
+            margin-top: 15px;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-item {
+            width: 100%;
+            background: white;
+            border: 1px solid #e4e7ed;
+            border-radius: 30px;
+            padding: 12px 20px 12px 45px;
+            font-size: 16px;
+            outline: none;
+            color: #303133;
+        }
+
+        .input-item::placeholder {
+            color: #c0c4cc;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #909399;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            padding: 0 5px;
+        }
+
+        .link-btn {
+            color: #008080;
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #303133;
+            cursor: pointer;
+        }
+
+        .custom-check {
+            width: 16px;
+            height: 16px;
+            background-color: #008952;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 10px;
+            margin-right: 6px;
+        }
+
+        .privacy-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0 15px 0;
+            font-size: 13px;
+        }
+
+        .privacy-link {
+            color: #008080;
+            text-decoration: underline;
+            margin-left: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #008952;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,89,82,0.15);
+        }
+
+        .forget-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 5px;
+            background: white;
+            margin: -20px -20px 20px -20px;
+            border-bottom: 1px solid #e4e7ed;
+        }
+
+        .back-arrow {
+            font-size: 24px;
+            color: #008952;
+            cursor: pointer;
+            padding-left: 15px;
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #008952;
+        }
+
+        .phone-flex {
+            display: flex;
+            align-items: center;
+        }
+
+        .country-prefix {
+            position: absolute;
+            left: 45px;
+            font-size: 16px;
+            color: #008952;
+            font-weight: bold;
+        }
+
+        .phone-line {
+            position: absolute;
+            left: 80px;
+            width: 1px;
+            height: 18px;
+            background: #dcdfe6;
+        }
+
+        .phone-input-pad {
+            padding-left: 95px !important;
+        }
+
+        .otp-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-send-otp {
+            background-color: #71bfa3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .version-label {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #909399;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="app-container">
+
+    <!-- 1. लॉगिन स्क्रीन -->
+    <div v-if="currentScreen === 'login'">
+        <div class="logo-section">
+            <div class="logo-circle">C<div class="rupee-badge">₹</div></div>
+            <div class="logo-text">DiwaPay</div>
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">👤</span>
+            <input type="tel" v-model="loginForm.phone" class="input-item" placeholder="Phone">
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" v-model="loginForm.password" class="input-item" placeholder="Password">
+        </div>
+
+        <div class="action-row">
+            <button class="link-btn" @click="changeScreen('register')">Register</button>
+            <div class="checkbox-container">
+                <span class="custom-check">✓</span> Remember Me
+            </div>
+        </div>
+
+        <div class="privacy-row">
+            <span class="custom-check">✓</span> Agree <span class="privacy-link">"User Privacy Agreement"</span>
+        </div>
+
+        <button class="btn-submit" @click="handleSignIn">Sign In</button>
+
+        <div class="forget-wrapper">
+            <button class="link-btn" @click="changeScreen('forget')">Forget Password</button>
+        </div>
+        
+        <div class="version-label">v1.1.7</div>
+    </div>
+
+    <!-- 2. रजिस्टर स्क्रीन -->
+    <div v-if="currentScreen === 'register'">
+        <div class="nav-header">
+            <span class="back-arrow" @click="changeScreen('login')">←</span>
+            <span class="nav-title">Register</span>
+            <span style="width: 40px;"></span>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <span class="input-icon">👤</span>
+            <input type="text" v-model="registerForm.username" class="input-item" placeholder="User Name">
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" v-model="registerForm.password" class="input-item" placeholder="Password">
+        </div>
+
+        <div class="form-group phone-flex">
+            <span class="input-icon">📞</span>
+            <span class="country-prefix">+91</span>
+            <div class="phone-line"></div>
+            <input type="tel" v-model="registerForm.phone" class="input-item phone-input-pad" placeholder="Phone">
+        </div>
+
+        <div class="form-group otp-container">
+            <div style="position: relative; flex: 1;">
+                <span class="input-icon">✉️</span>
+                <input type="text" v-model="registerForm.otp" class="input-item" placeholder="OTP Code">
+            </div>
+            <button class="btn-send-otp" @click="sendOTP">Send</button>
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">🔗</span>
+            <input type="text" v-model="registerForm.inviteCode" class="input-item" placeholder="Invite Code">
+        </div>
+
+        <button class="btn-submit" style="margin-top: 20px;" @click="handleSignUp">Sign Up</button>
+    </div>
+
+    <!-- 3. भूल गए पासवर्ड (Forget Password) स्क्रीन -->
+    <div v-if="currentScreen === 'forget'">
+        <div class="nav-header">
+            <span class="back-arrow" @click="changeScreen('login')">←</span>
+            <span class="nav-title">Reset Password</span>
+            <span style="width: 40px;"></span>
+        </div>
+
+        <div class="logo-section">
+            <div class="logo-circle">C<div class="rupee-badge"></div></div>
+            <div class="logo-text">DiwaPay</div>
+        </div>
+
+      
