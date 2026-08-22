@@ -22,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* मुख्य मोबाइल फ्रेम कंटेनर */
         .app-container {
             width: 100%;
             max-width: 420px;
@@ -33,10 +32,8 @@
             flex-direction: column;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0,0,0,0.05);
-            overflow-x: hidden;
         }
 
-        /* लोगो डिज़ाइन */
         .logo-section {
             display: flex;
             flex-direction: column;
@@ -56,7 +53,6 @@
             font-size: 46px;
             color: white;
             font-weight: bold;
-            box-shadow: 0 4px 12px rgba(26,86,218,0.2);
         }
 
         .logo-text {
@@ -64,10 +60,8 @@
             font-weight: 800;
             color: #1a56da;
             margin-top: 15px;
-            letter-spacing: 1px;
         }
 
-        /* इनपुट बॉक्स और फॉर्म सेटिंग्स */
         .form-group {
             width: 100%;
             margin-bottom: 18px;
@@ -83,11 +77,6 @@
             font-size: 16px;
             outline: none;
             color: #303133;
-            transition: all 0.3s;
-        }
-
-        .input-item:focus {
-            border-color: #008952;
         }
 
         .input-icon {
@@ -99,7 +88,6 @@
             color: #1a56da;
         }
 
-        /* लिंक और रो सेटिंग्स */
         .action-row {
             display: flex;
             justify-content: space-between;
@@ -152,7 +140,6 @@
             margin-left: 4px;
         }
 
-        /* मुख्य हरा बटन */
         .btn-submit {
             width: 100%;
             background-color: #008952;
@@ -163,11 +150,6 @@
             font-size: 17px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,137,82,0.2);
-        }
-
-        .btn-submit:active {
-            background-color: #006b40;
         }
 
         .forget-wrapper {
@@ -175,7 +157,6 @@
             margin-top: 25px;
         }
 
-        /* टॉप हेडर बार (सिर्फ रजिस्टर और रीसेट पेज के लिए) */
         .nav-header {
             display: flex;
             align-items: center;
@@ -200,7 +181,6 @@
             color: #008952;
         }
 
-        /* फोन नंबर इनपुट प्रीफिक्स */
         .phone-flex {
             display: flex;
             align-items: center;
@@ -226,7 +206,6 @@
             padding-left: 95px !important;
         }
 
-        /* ओटीपी बॉक्स और सेंड बटन */
         .otp-container {
             display: flex;
             gap: 10px;
@@ -241,12 +220,6 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-send-otp:disabled {
-            background-color: #c0c4cc;
-            cursor: not-allowed;
         }
 
         .version-label {
@@ -262,7 +235,7 @@
 
 <div id="app" class="app-container">
 
-    <!-- SCREEN 1: सिर्फ लॉगिन (Home) स्क्रीन - शुरुआत में सिर्फ यही दिखेगी -->
+    <!-- 1. लॉगिन स्क्रीन -->
     <div v-if="currentScreen === 'login'">
         <div class="logo-section">
             <div class="logo-circle">C</div>
@@ -280,8 +253,7 @@
         </div>
 
         <div class="action-row">
-            <!-- इस पर क्लिक करने से रजिस्टर स्क्रीन खुलेगी -->
-            <button class="link-btn" @click="changeScreen('register')">Register</button>
+            <button type="button" class="link-btn" @click="changeScreen('register')">Register</button>
             <div class="checkbox-container">
                 <span class="custom-check">✓</span> Remember Me
             </div>
@@ -291,17 +263,16 @@
             <span class="custom-check">✓</span> Agree <span class="privacy-link">"User Privacy Agreement"</span>
         </div>
 
-        <button class="btn-submit" @click="handleSignIn">Sign In</button>
+        <button type="button" class="btn-submit" @click="handleSignIn">Sign In</button>
 
         <div class="forget-wrapper">
-            <!-- इस पर क्लिक करने से रीसेट स्क्रीन खुलेगी -->
-            <button class="link-btn" @click="changeScreen('forget')">Forget Password</button>
+            <button type="button" class="link-btn" @click="changeScreen('forget')">Forget Password</button>
         </div>
         
         <div class="version-label">v1.1.7</div>
     </div>
 
-    <!-- SCREEN 2: रजिस्टर स्क्रीन - यह डिफ़ॉल्ट रूप से छुपी रहेगी -->
+    <!-- 2. रजिस्टर स्क्रीन -->
     <div v-if="currentScreen === 'register'">
         <div class="nav-header">
             <span class="back-arrow" @click="changeScreen('login')">←</span>
@@ -331,8 +302,7 @@
                 <span class="input-icon">✉️</span>
                 <input type="text" v-model="registerForm.otp" class="input-item" placeholder="OTP Code">
             </div>
-            <!-- ओटीपी भेजने का असली बटन -->
-            <button class="btn-send-otp" :disabled="otpCountdown > 0" @click="sendOTP">
+            <button type="button" class="btn-send-otp" :disabled="otpCountdown > 0" @click="sendOTP">
                 {{ otpCountdown > 0 ? otpCountdown + 's' : 'Send' }}
             </button>
         </div>
@@ -342,7 +312,32 @@
             <input type="text" v-model="registerForm.inviteCode" class="input-item" placeholder="Invite Code">
         </div>
 
-        <button class="btn-submit" style="margin-top: 15px;" @click="handleSignUp">Sign Up</button>
+        <button type="button" class="btn-submit" style="margin-top: 15px;" @click="handleSignUp">Sign Up</button>
     </div>
 
-    
+    <!-- 3. रीसेट पासवर्ड स्क्रीन -->
+    <div v-if="currentScreen === 'forget'">
+        <div class="nav-header">
+            <span class="back-arrow" @click="changeScreen('login')">←</span>
+            <span class="nav-title">Reset Password</span>
+            <span style="width: 40px;"></span>
+        </div>
+
+        <div class="logo-section">
+            <div class="logo-circle">C</div>
+            <div class="logo-text">DiwaPay</div>
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">📞</span>
+            <input type="tel" v-model="forgetForm.phone" class="input-item" placeholder="Registered Phone">
+        </div>
+
+        <div class="form-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" v-model="forgetForm.password" class="input-item" placeholder="New Password">
+        </div>
+
+        <button type="button" class="btn-submit" style="margin-top: 15px;" @click="handleResetPassword">Reset Password</button>
+
+        
