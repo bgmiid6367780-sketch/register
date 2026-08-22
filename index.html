@@ -3,92 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiwaPay</title>
-    <!-- Vue.js CDN -->
+    <title>Come Pay - Login</title>
+    <!-- Vue.js CDN (यह सिर्फ पेजों को आपस में जोड़ने के काम आएगा, अभी कोई एक्स्ट्रा कोडिंग नहीं है) -->
     <script src="https://unpkg.com"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #f4f6fa;
+            background-color: #f8faff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
+        /* मोबाइल स्क्रीन फ्रेम जो आपके स्क्रीनशॉट जैसा दिखेगा */
         .app-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 430px;
             min-height: 100vh;
             background-color: #f8faff;
             position: relative;
             display: flex;
             flex-direction: column;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            align-items: center;
+            padding: 30px;
         }
 
-        .logo-section {
+        /* लोगो सेक्शन डिज़ाइन */
+        .logo-container {
+            margin-top: 60px;
+            margin-bottom: 50px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
-            margin-bottom: 40px;
         }
 
-        .logo-circle {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #1a56da, #ff9800);
-            border-radius: 22px;
+        /* हूबहू आपके स्क्रीनशॉट जैसा दिखने वाला सुंदर CSS लोगो */
+        .logo-graphic {
+            width: 130px;
+            height: 110px;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 46px;
-            color: white;
+        }
+
+        .shape-c {
+            width: 70px;
+            height: 70px;
+            border: 18px solid #1a56da;
+            border-right-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            left: 10px;
+        }
+
+        .shape-arrow {
+            width: 0;
+            height: 0;
+            border-top: 25px solid transparent;
+            border-bottom: 25px solid transparent;
+            border-left: 45px solid #ff9800;
+            position: absolute;
+            right: 15px;
+            transform: rotate(-15deg);
+        }
+
+        .wallet-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 25px;
+            background: #1a56da;
+            border: 3px solid #ff9800;
+            width: 32px;
+            height: 24px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ff9800;
+            font-size: 11px;
             font-weight: bold;
         }
 
         .logo-text {
             font-size: 26px;
-            font-weight: 800;
+            font-weight: 900;
             color: #1a56da;
             margin-top: 15px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        .form-group {
+        /* इनपुट बॉक्स स्टाइलिंग */
+        .form-box {
             width: 100%;
-            margin-bottom: 18px;
+            padding: 0 10px;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 20px;
             position: relative;
         }
 
-        .input-item {
+        .input-field {
             width: 100%;
             background: white;
-            border: 1px solid #e4e7ed;
-            border-radius: 30px;
-            padding: 14px 20px 14px 45px;
-            font-size: 16px;
+            border: 1px solid #dcdfe6;
+            border-radius: 35px;
+            padding: 16px 20px 16px 60px;
+            font-size: 18px;
             outline: none;
             color: #303133;
         }
 
-        .input-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            color: #1a56da;
+        .input-field::placeholder {
+            color: #c0c4cc;
         }
 
-        .action-row {
+        .input-icon-box {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border: 2px solid #303133;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-icon-box.lock-icon {
+            border-radius: 6px;
+            height: 24px;
+        }
+
+        .icon-inner {
+            font-size: 14px;
+            color: #303133;
+            font-weight: bold;
+        }
+
+        /* कस्टमाइज्ड लिंक्स और कतारें (Rows) */
+        .row-links {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -96,135 +162,77 @@
             padding: 0 5px;
         }
 
-        .link-btn {
+        .green-link {
             color: #008080;
             font-size: 15px;
             text-decoration: underline;
             cursor: pointer;
             background: none;
             border: none;
-            font-weight: 500;
         }
 
-        .checkbox-container {
+        .checkbox-row {
             display: flex;
             align-items: center;
-            font-size: 14px;
+            font-size: 15px;
             color: #303133;
         }
 
-        .custom-check {
+        /* गोल हरा टिक मार्क जैसा स्क्रीनशॉट में है */
+        .green-tick-circle {
             width: 18px;
             height: 18px;
-            background-color: #008952;
+            background-color: #72c061;
             border-radius: 50%;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             color: white;
             font-size: 11px;
-            margin-right: 6px;
+            margin-right: 8px;
+            font-weight: bold;
         }
 
-        .privacy-row {
+        /* प्राइवेसी एग्रीमेंट वाली लाइन */
+        .privacy-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 35px 0 20px 0;
-            font-size: 14px;
+            margin: 40px 0 25px 0;
+            font-size: 15px;
+            color: #303133;
         }
 
-        .privacy-link {
-            color: #008080;
+        .underline-text {
             text-decoration: underline;
+            color: #008080;
             margin-left: 4px;
         }
 
-        .btn-submit {
+        /* बड़ा गहरा हरा बटन */
+        .btn-signin {
             width: 100%;
             background-color: #008952;
             color: white;
             border: none;
-            border-radius: 30px;
-            padding: 15px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .forget-wrapper {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        .nav-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 5px;
-            background: white;
-            margin: -20px -20px 25px -20px;
-            border-bottom: 1px solid #e4e7ed;
-        }
-
-        .back-arrow {
-            font-size: 26px;
-            color: #008952;
-            cursor: pointer;
-            padding-left: 15px;
-            font-weight: bold;
-        }
-
-        .nav-title {
+            border-radius: 35px;
+            padding: 16px;
             font-size: 19px;
             font-weight: bold;
-            color: #008952;
-        }
-
-        .phone-flex {
-            display: flex;
-            align-items: center;
-        }
-
-        .country-prefix {
-            position: absolute;
-            left: 45px;
-            font-size: 16px;
-            color: #008952;
-            font-weight: bold;
-        }
-
-        .phone-line {
-            position: absolute;
-            left: 82px;
-            width: 1px;
-            height: 20px;
-            background: #dcdfe6;
-        }
-
-        .phone-input-pad {
-            padding-left: 95px !important;
-        }
-
-        .otp-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-send-otp {
-            background-color: #71bfa3;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 0 22px;
-            font-size: 14px;
-            font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,137,82,0.15);
         }
 
-        .version-label {
+        /* भूल गए पासवर्ड का सेक्शन */
+        .forget-container {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        /* ऐप का वर्जन नीचे कोने में */
+        .version-info {
             position: absolute;
-            bottom: 25px;
+            bottom: 20px;
             right: 25px;
             font-size: 13px;
             color: #909399;
@@ -235,109 +243,69 @@
 
 <div id="app" class="app-container">
 
-    <!-- 1. लॉगिन स्क्रीन -->
-    <div v-if="currentScreen === 'login'">
-        <div class="logo-section">
-            <div class="logo-circle">C</div>
-            <div class="logo-text">DiwaPay</div>
+    <!-- कम पे (COME PAY) मुख्य लॉगिन स्क्रीन -->
+    <div class="logo-container">
+        <!-- आपका ग्राफिक लोगो -->
+        <div class="logo-graphic">
+            <div class="shape-c"></div>
+            <div class="shape-arrow"></div>
+            <div class="wallet-badge">₹</div>
+        </div>
+        <div class="logo-text">COME PAY</div>
+    </div>
+
+    <div class="form-box">
+        <!-- फोन नंबर इनपुट बॉक्स -->
+        <div class="input-group">
+            <div class="input-icon-box">
+                <span class="icon-inner">👤</span>
+            </div>
+            <input type="tel" class="input-field" placeholder="Phone">
         </div>
 
-        <div class="form-group">
-            <span class="input-icon">👤</span>
-            <input type="tel" v-model="loginForm.phone" class="input-item" placeholder="Phone">
+        <!-- पासवर्ड इनपुट बॉक्स -->
+        <div class="input-group">
+            <div class="input-icon-box lock-icon">
+                <span class="icon-inner">🔒</span>
+            </div>
+            <input type="password" class="input-field" placeholder="Password">
         </div>
 
-        <div class="form-group">
-            <span class="input-icon">🔒</span>
-            <input type="password" v-model="loginForm.password" class="input-item" placeholder="Password">
-        </div>
-
-        <div class="action-row">
-            <button type="button" class="link-btn" @click="changeScreen('register')">Register</button>
-            <div class="checkbox-container">
-                <span class="custom-check">✓</span> Remember Me
+        <!-- रजिस्टर और रिमेंबर मी रो -->
+        <div class="row-links">
+            <button class="green-link">Register</button>
+            <div class="checkbox-row">
+                <span class="green-tick-circle">✓</span> Remember Me
             </div>
         </div>
 
-        <div class="privacy-row">
-            <span class="custom-check">✓</span> Agree <span class="privacy-link">"User Privacy Agreement"</span>
+        <!-- प्राइवेसी पॉलिसी रो -->
+        <div class="privacy-container">
+            <span class="green-tick-circle">✓</span> Agree<span class="underline-text">"User Privacy Agreement"</span>
         </div>
 
-        <button type="button" class="btn-submit" @click="handleSignIn">Sign In</button>
+        <!-- साइन इन बटन -->
+        <button class="btn-signin">Sign In</button>
 
-        <div class="forget-wrapper">
-            <button type="button" class="link-btn" @click="changeScreen('forget')">Forget Password</button>
+        <!-- फॉरगेट पासवर्ड लिंक -->
+        <div class="forget-container">
+            <button class="green-link">Forget Password</button>
         </div>
-        
-        <div class="version-label">v1.1.7</div>
     </div>
+    
+    <!-- वर्जन लेबल -->
+    <div class="version-info">v1.1.7</div>
 
-    <!-- 2. रजिस्टर स्क्रीन -->
-    <div v-if="currentScreen === 'register'">
-        <div class="nav-header">
-            <span class="back-arrow" @click="changeScreen('login')">←</span>
-            <span class="nav-title">Register</span>
-            <span style="width: 40px;"></span>
-        </div>
+</div>
 
-        <div class="form-group" style="margin-top: 10px;">
-            <span class="input-icon">👤</span>
-            <input type="text" v-model="registerForm.username" class="input-item" placeholder="User Name">
-        </div>
-
-        <div class="form-group">
-            <span class="input-icon">🔒</span>
-            <input type="password" v-model="registerForm.password" class="input-item" placeholder="Password">
-        </div>
-
-        <div class="form-group phone-flex">
-            <span class="input-icon">📞</span>
-            <span class="country-prefix">+91</span>
-            <div class="phone-line"></div>
-            <input type="tel" v-model="registerForm.phone" class="input-item phone-input-pad" placeholder="Phone">
-        </div>
-
-        <div class="form-group otp-container">
-            <div style="position: relative; flex: 1;">
-                <span class="input-icon">✉️</span>
-                <input type="text" v-model="registerForm.otp" class="input-item" placeholder="OTP Code">
-            </div>
-            <button type="button" class="btn-send-otp" :disabled="otpCountdown > 0" @click="sendOTP">
-                {{ otpCountdown > 0 ? otpCountdown + 's' : 'Send' }}
-            </button>
-        </div>
-
-        <div class="form-group">
-            <span class="input-icon">🔗</span>
-            <input type="text" v-model="registerForm.inviteCode" class="input-item" placeholder="Invite Code">
-        </div>
-
-        <button type="button" class="btn-submit" style="margin-top: 15px;" @click="handleSignUp">Sign Up</button>
-    </div>
-
-    <!-- 3. रीसेट पासवर्ड स्क्रीन -->
-    <div v-if="currentScreen === 'forget'">
-        <div class="nav-header">
-            <span class="back-arrow" @click="changeScreen('login')">←</span>
-            <span class="nav-title">Reset Password</span>
-            <span style="width: 40px;"></span>
-        </div>
-
-        <div class="logo-section">
-            <div class="logo-circle">C</div>
-            <div class="logo-text">DiwaPay</div>
-        </div>
-
-        <div class="form-group">
-            <span class="input-icon">📞</span>
-            <input type="tel" v-model="forgetForm.phone" class="input-item" placeholder="Registered Phone">
-        </div>
-
-        <div class="form-group">
-            <span class="input-icon">🔒</span>
-            <input type="password" v-model="forgetForm.password" class="input-item" placeholder="New Password">
-        </div>
-
-        <button type="button" class="btn-submit" style="margin-top: 15px;" @click="handleResetPassword">Reset Password</button>
-
-        
+<script>
+    // सरल Vue सेटअप ताकि भविष्य में आप इसमें जो चाहें जोड़ सकें
+    const { createApp } = Vue;
+    createApp({
+        setup() {
+            return {};
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
