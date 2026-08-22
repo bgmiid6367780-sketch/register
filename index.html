@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <script>
-        var __UniViewStartTime__ = Date.now();
-        var coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'))
-        document.write('<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' + (coverSupport ? ', viewport-fit=cover' : '') + '" />')
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>Come Pay</title>
-    <link rel="stylesheet" href="view.css" />
+    <!-- Vue.js CDN (यह पेज बदलने और लोडिंग के लिए बिल्कुल ज़रूरी है) -->
+    <script src="https://unpkg.com"></script>
     <style>
         * {
             margin: 0;
@@ -37,14 +34,14 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.05);
         }
 
-        /* ------------------ असली ऐप जैसी लोडिंग स्क्रीन ------------------ */
+        /* ------------------ घूमती हुई लोडिंग स्क्रीन ------------------ */
         .loading-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -53,19 +50,20 @@
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #e4e7ed;
-            border-top: 5px solid #008952;
+            width: 45px;
+            height: 45px;
+            border: 4px solid #e4e7ed;
+            border-top: 4px solid #008952;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         .loading-text {
-            margin-top: 15px;
-            font-size: 16px;
+            margin-top: 12px;
+            font-size: 15px;
             font-weight: bold;
             color: #008952;
+            letter-spacing: 1px;
         }
 
         @keyframes spin {
@@ -161,6 +159,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 14px;
         }
 
         .input-icon-box.lock-icon { border-radius: 6px; height: 24px; }
@@ -252,9 +251,9 @@
 
         .user-meta h4 { font-size: 18px; font-weight: bold; color: #111; }
         .user-meta p { font-size: 14px; color: #666; margin-top: 2px; }
-        .copy-icon-btn { display: inline-block; background: #eee; padding: 2px 6px; font-size: 11px; border-radius: 4px; margin-left: 5px; cursor: pointer; }
+        .copy-icon-btn { display: inline-block; background: #eee; padding: 2px 6px; font-size: 11px; border-radius: 4px; margin-left: 5px; }
         
-        .noti-icon { font-size: 24px; position: relative; cursor: pointer; }
+        .noti-icon { font-size: 24px; position: relative; }
         .noti-dot { position: absolute; top: 2px; right: 2px; width: 8px; height: 8px; background: red; border-radius: 50%; }
 
         .balance-card {
@@ -268,7 +267,7 @@
         }
 
         .balance-title { font-size: 16px; font-weight: 500; opacity: 0.9; }
-        .balance-amount { font-size: 36px; font-weight: bold; margin-top: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .balance-amount { font-size: 36px; font-weight: bold; margin-top: 10px; margin-bottom: 15px; }
         
         .btn-detail {
             position: absolute;
@@ -319,7 +318,6 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
         }
 
         .action-circle-icon {
@@ -334,5 +332,12 @@
             font-size: 22px;
             position: relative;
         }
-
         
+        .usdt-badge { position: absolute; top: -10px; background: #008952; color: white; font-size: 9px; padding: 2px 4px; border-radius: 4px; font-weight: bold; }
+        .action-item-box span { font-size: 14px; font-weight: 500; color: #333; }
+
+        .trans-section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
